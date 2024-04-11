@@ -6,63 +6,62 @@ from tgbot.database.db_payments import Paymentsx
 from tgbot.database.db_settings import Settingsx
 from tgbot.utils.const_functions import ikb
 
-
 ################################################################################
-#################################### ПРОЧЕЕ ####################################
-# Удаление сообщения
+#################################### DIVERS ####################################
+# Suppression du message
 def close_finl() -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardBuilder()
 
     keyboard.row(
-        ikb("❌ Закрыть", data="close_this"),
+        ikb("❌ Fermer", data="close_this"),
     )
 
     return keyboard.as_markup()
 
 
-# Рассылка
+# Confirmation de l'envoi d'un mail
 def mail_confirm_finl() -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardBuilder()
 
     keyboard.row(
-        ikb("✅ Отправить", data="confirm_mail:yes"),
-        ikb("❌ Отменить", data="confirm_mail:not"),
+        ikb("✅ Envoyer", data="confirm_mail:yes"),
+        ikb("❌ Annuler", data="confirm_mail:not"),
     )
 
     return keyboard.as_markup()
 
 
-# Поиск профиля пользователя
+# Recherche de profil utilisateur
 def profile_search_finl(user_id) -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardBuilder()
 
     keyboard.row(
-        ikb("💰 Изменить баланс", data=f"admin_user_balance_set:{user_id}"),
-        ikb("💰 Выдать баланс", data=f"admin_user_balance_add:{user_id}"),
+        ikb("💰 Modifier le solde", data=f"admin_user_balance_set:{user_id}"),
+        ikb("💰 Créditer un solde", data=f"admin_user_balance_add:{user_id}"),
     ).row(
-        ikb("🎁 Покупки", data=f"admin_user_purchases:{user_id}"),
-        ikb("💌 Отправить СМС", data=f"admin_user_message:{user_id}"),
+        ikb("🎁 Achats", data=f"admin_user_purchases:{user_id}"),
+        ikb("💌 Envoyer un SMS", data=f"admin_user_message:{user_id}"),
     ).row(
-        ikb("🔄 Обновить", data=f"admin_user_refresh:{user_id}"),
+        ikb("🔄 Actualiser", data=f"admin_user_refresh:{user_id}"),
     )
 
     return keyboard.as_markup()
 
 
-# Возвращение к профилю пользователя
+# Retour au profil utilisateur
 def profile_search_return_finl(user_id) -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardBuilder()
 
     keyboard.row(
-        ikb("❌ Отменить", data=f"admin_user_refresh:{user_id}"),
+        ikb("❌ Annuler", data=f"admin_user_refresh:{user_id}"),
     )
 
     return keyboard.as_markup()
 
 
 ################################################################################
-############################## ПЛАТЕЖНЫЕ СИСТЕМЫ ###############################
-# Способы пополнения
+############################## SYSTÈMES DE PAIEMENT ###############################
+# Méthodes de paiement
 def payment_method_finl() -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardBuilder()
 
@@ -79,101 +78,101 @@ def payment_method_finl() -> InlineKeyboardMarkup:
     keyboard.row(
         ikb("🥝 QIWI", url="https://vk.cc/csUUYy"), status_qiwi_kb,
     ).row(
-        ikb("🔮 ЮMoney", url="https://vk.cc/csUUXt"), status_yoomoney_kb,
+        ikb("🔮 YooMoney", url="https://vk.cc/csUUXt"), status_yoomoney_kb,
     )
 
     return keyboard.as_markup()
 
 
-# Управление ЮMoney
+# Gestion de YooMoney
 def payment_yoomoney_finl() -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardBuilder()
 
     keyboard.row(
-        ikb("🔮 Баланс 💰", data="payment_yoomoney_balance"),
+        ikb("🔮 Solde 💰", data="payment_yoomoney_balance"),
     ).row(
-        ikb("🔮 Проверить ♻️", data="payment_yoomoney_check"),
+        ikb("🔮 Vérifier ♻️", data="payment_yoomoney_check"),
     ).row(
-        ikb("🔮 Изменить 🖍", data="payment_yoomoney_edit"),
+        ikb("🔮 Modifier 🖍", data="payment_yoomoney_edit"),
     )
 
     return keyboard.as_markup()
 
 
-# Управление QIWI
+# Gestion de QIWI
 def payment_qiwi_finl() -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardBuilder()
 
     keyboard.row(
-        ikb("🥝 Баланс 💰", data="payment_qiwi_balance"),
+        ikb("🥝 Solde 💰", data="payment_qiwi_balance"),
     ).row(
-        ikb("🥝 Проверить ♻️", data="payment_qiwi_check"),
+        ikb("🥝 Vérifier ♻️", data="payment_qiwi_check"),
     ).row(
-        ikb("🥝 Изменить 🖍", data="payment_qiwi_edit"),
+        ikb("🥝 Modifier 🖍", data="payment_qiwi_edit"),
     )
 
     return keyboard.as_markup()
 
 
 ################################################################################
-################################## НАСТРОЙКИ ###################################
-# Кнопки с настройками
+################################## PARAMÈTRES ###################################
+# Boutons des paramètres
 def settings_open_finl() -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardBuilder()
 
     get_settings = Settingsx.get()
 
-    # Поддержка
+    # Support
     if get_settings.misc_support == "None":
-        support_kb = ikb("Не установлена ❌", data="settings_edit_support")
+        support_kb = ikb("Non défini ❌", data="settings_edit_support")
     else:
         support_kb = ikb(f"@{get_settings.misc_support} ✅", data="settings_edit_support")
 
     # FAQ
     if get_settings.misc_faq == "None":
-        faq_kb = ikb("Не установлено ❌", data="settings_edit_faq")
+        faq_kb = ikb("Non défini ❌", data="settings_edit_faq")
     else:
         faq_kb = ikb(f"{get_settings.misc_faq[:15]}... ✅", data="settings_edit_faq")
 
     if get_settings.misc_item_hide == "True":
-        item_hide_kb = ikb("Скрыты", data="settings_edit_item_hide:False")
+        item_hide_kb = ikb("Cachés", data="settings_edit_item_hide:False")
     else:
-        item_hide_kb = ikb("Отображены", data="settings_edit_item_hide:True")
+        item_hide_kb = ikb("Affichés", data="settings_edit_item_hide:True")
 
     keyboard.row(
         ikb("❔ FAQ", data="..."), faq_kb,
     ).row(
-        ikb("☎️ Поддержка", data="..."), support_kb,
+        ikb("☎️ Support", data="..."), support_kb,
     ).row(
-        ikb("🎁 Позиции без товаров", data="..."), item_hide_kb,
+        ikb("🎁 Positions sans produits", data="..."), item_hide_kb,
     )
 
     return keyboard.as_markup()
 
 
-# Выключатели
+# Interrupteurs
 def turn_open_finl() -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardBuilder()
 
     get_settings = Settingsx.get()
 
-    status_work_kb = ikb("Включены ✅", data="turn_work:False")
-    status_buy_kb = ikb("Включены ✅", data="turn_buy:False")
-    status_refill_kb = ikb("Включены ✅", data="turn_pay:False")
+    status_work_kb = ikb("Activés ✅", data="turn_work:False")
+    status_buy_kb = ikb("Activés ✅", data="turn_buy:False")
+    status_refill_kb = ikb("Activés ✅", data="turn_pay:False")
 
     if get_settings.status_buy == "False":
-        status_buy_kb = ikb("Выключены ❌", data="turn_buy:True")
+        status_buy_kb = ikb("Désactivés ❌", data="turn_buy:True")
     if get_settings.status_work == "False":
-        status_work_kb = ikb("Выключены ❌", data="turn_work:True")
+        status_work_kb = ikb("Désactivés ❌", data="turn_work:True")
     if get_settings.status_refill == "False":
-        status_refill_kb = ikb("Выключены ❌", data="turn_pay:True")
+        status_refill_kb = ikb("Désactivés ❌", data="turn_pay:True")
 
     keyboard.row(
-        ikb("⛔ Тех. работы", data="..."), status_work_kb,
+        ikb("⛔ Travaux techniques", data="..."), status_work_kb,
     ).row(
-        ikb("💰 Пополнения", data="..."), status_refill_kb,
+        ikb("💰 Recharges", data="..."), status_refill_kb,
     ).row(
-        ikb("🎁 Покупки", data="..."), status_buy_kb,
+        ikb("🎁 Achats", data="..."), status_buy_kb,
     )
 
     return keyboard.as_markup()

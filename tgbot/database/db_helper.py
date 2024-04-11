@@ -4,8 +4,7 @@ import sqlite3
 from tgbot.data.config import PATH_DATABASE
 from tgbot.utils.const_functions import get_unix, ded
 
-
-# Преобразование полученного списка в словарь
+# Conversion de la liste obtenue en dictionnaire
 def dict_factory(cursor, row) -> dict:
     save_dict = {}
 
@@ -14,8 +13,7 @@ def dict_factory(cursor, row) -> dict:
 
     return save_dict
 
-
-# Форматирование запроса без аргументов
+# Formatage de la requête sans arguments
 def update_format(sql, parameters: dict) -> tuple[str, list]:
     values = ", ".join([
         f"{item} = ?" for item in parameters
@@ -24,8 +22,7 @@ def update_format(sql, parameters: dict) -> tuple[str, list]:
 
     return sql, list(parameters.values())
 
-
-# Форматирование запроса с аргументами
+# Formatage de la requête avec arguments
 def update_format_where(sql, parameters: dict) -> tuple[str, list]:
     sql += " WHERE "
 
@@ -35,17 +32,16 @@ def update_format_where(sql, parameters: dict) -> tuple[str, list]:
 
     return sql, list(parameters.values())
 
-
 ################################################################################
-# Создание всех таблиц для БД
+# Création de toutes les tables pour la base de données
 def create_dbx():
     with sqlite3.connect(PATH_DATABASE) as con:
         con.row_factory = dict_factory
 
         ############################################################
-        # Создание таблицы с хранением - пользователей
+        # Création de la table de stockage - utilisateurs
         if len(con.execute("PRAGMA table_info(storage_users)").fetchall()) == 8:
-            print("DB was found(1/8)")
+            print("Base de données trouvée (1/8)")
         else:
             con.execute(
                 ded(f"""
@@ -61,11 +57,11 @@ def create_dbx():
                     )
                 """)
             )
-            print("DB was not found(1/8) | Creating...")
+            print("Base de données non trouvée (1/8) | Création...")
 
-        # Создание таблицы с хранением - настроек
+        # Création de la table de stockage - paramètres
         if len(con.execute("PRAGMA table_info(storage_settings)").fetchall()) == 10:
-            print("DB was found(2/8)")
+            print("Base de données trouvée (2/8)")
         else:
             con.execute(
                 ded(f"""
@@ -113,12 +109,12 @@ def create_dbx():
                     get_unix(),
                 ]
             )
-            print("DB was not found(2/8) | Creating...")
+            print("Base de données non trouvée (2/8) | Création...")
 
         ############################################################
-        # Создание таблицы с хранением - данных платежных систем
+        # Création de la table de stockage - données des systèmes de paiement
         if len(con.execute("PRAGMA table_info(storage_payment)").fetchall()) == 5:
-            print("DB was found(3/8)")
+            print("Base de données trouvée (3/8)")
         else:
             con.execute(
                 ded(f"""
@@ -151,12 +147,12 @@ def create_dbx():
                     'False',
                 ]
             )
-            print("DB was not found(3/8) | Creating...")
+            print("Base de données non trouvée (3/8) | Création...")
 
         ############################################################
-        # Создание таблицы с хранением - пополнений пользователей
+        # Création de la table de stockage - recharges des utilisateurs
         if len(con.execute("PRAGMA table_info(storage_refill)").fetchall()) == 7:
-            print("DB was found(4/8)")
+            print("Base de données trouvée (4/8)")
         else:
             con.execute(
                 ded(f"""
@@ -171,12 +167,12 @@ def create_dbx():
                     )
                 """)
             )
-            print("DB was not found(4/8) | Creating...")
+            print("Base de données non trouvée (4/8) | Création...")
 
         ############################################################
-        # Создание таблицы с хранением - категорий
+        # Création de la table de stockage - catégories
         if len(con.execute("PRAGMA table_info(storage_category)").fetchall()) == 4:
-            print("DB was found(5/8)")
+            print("Base de données trouvée (5/8)")
         else:
             con.execute(
                 ded(f"""
@@ -188,12 +184,12 @@ def create_dbx():
                     )
                 """)
             )
-            print("DB was not found(5/8) | Creating...")
+            print("Base de données non trouvée (5/8) | Création...")
 
         ############################################################
-        # Создание таблицы с хранением - позиций
+        # Création de la table de stockage - positions
         if len(con.execute("PRAGMA table_info(storage_position)").fetchall()) == 8:
-            print("DB was found(6/8)")
+            print("Base de données trouvée (6/8)")
         else:
             con.execute(
                 ded(f"""
@@ -209,12 +205,12 @@ def create_dbx():
                     )
                 """)
             )
-            print("DB was not found(6/8) | Creating...")
+            print("Base de données non trouvée (6/8) | Création...")
 
         ############################################################
-        # Создание таблицы с хранением - товаров
+        # Création de la table de stockage - articles
         if len(con.execute("PRAGMA table_info(storage_item)").fetchall()) == 7:
-            print("DB was found(7/8)")
+            print("Base de données trouvée (7/8)")
         else:
             con.execute(
                 ded(f"""
@@ -229,12 +225,12 @@ def create_dbx():
                     )
                 """)
             )
-            print("DB was not found(7/8) | Creating...")
+            print("Base de données non trouvée (7/8) | Création...")
 
         ############################################################
-        # Создание таблицы с хранением - покупок
+        # Création de la table de stockage - achats
         if len(con.execute("PRAGMA table_info(storage_purchases)").fetchall()) == 14:
-            print("DB was found(8/8)")
+            print("Base de données trouvée (8/8)")
         else:
             con.execute(
                 ded(f"""
@@ -256,4 +252,4 @@ def create_dbx():
                     )
                 """)
             )
-            print("DB was not found(8/8) | Creating...")
+            print("Base de données non trouvée (8/8) | Création...")

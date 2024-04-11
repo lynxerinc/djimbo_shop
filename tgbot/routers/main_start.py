@@ -10,7 +10,7 @@ from tgbot.utils.const_functions import ded
 from tgbot.utils.misc.bot_filters import IsBuy, IsRefill, IsWork
 from tgbot.utils.misc.bot_models import FSM, ARS
 
-# Игнор-колбэки покупок
+# Callbacks à ignorer pour les achats
 prohibit_buy = [
     'buy_category_swipe',
     'buy_category_open',
@@ -20,7 +20,7 @@ prohibit_buy = [
     'buy_item_confirm',
 ]
 
-# Игнор-колбэки пополнений
+# Callbacks à ignorer pour les recharges
 prohibit_refill = [
     'user_refill',
     'user_refill_method',
@@ -33,8 +33,8 @@ router = Router(name=__name__)
 
 
 ################################################################################
-########################### СТАТУС ТЕХНИЧЕСКИХ РАБОТ ###########################
-# Фильтр на технические работы - сообщение
+###################### STATUT DES TRAVAUX TECHNIQUES ###########################
+# Filtre pour les travaux techniques - message
 @router.message(IsWork())
 async def filter_work_message(message: Message, bot: Bot, state: FSM, arSession: ARS):
     await state.clear()
@@ -43,70 +43,70 @@ async def filter_work_message(message: Message, bot: Bot, state: FSM, arSession:
 
     if get_settings.misc_support != "None":
         return await message.answer(
-            "<b>⛔ Бот находится на технических работах.</b>",
+            "<b>⛔ Le bot est en maintenance technique.</b>",
             reply_markup=user_support_finl(get_settings.misc_support),
         )
 
-    await message.answer("<b>⛔ Бот находится на технических работах.</b>")
+    await message.answer("<b>⛔ Le bot est en maintenance technique.</b>")
 
 
-# Фильтр на технические работы - колбэк
+# Filtre pour les travaux techniques - callback
 @router.callback_query(IsWork())
 async def filter_work_callback(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     await state.clear()
 
-    await call.answer("⛔ Бот находится на технических работах.", True)
+    await call.answer("⛔ Le bot est en maintenance technique.", True)
 
 
 ################################################################################
-################################# СТАТУС ПОКУПОК ###############################
-# Фильтр на доступность покупок - сообщение
-@router.message(IsBuy(), F.text == "🎁 Купить")
+############################### STATUT DES ACHATS ###############################
+# Filtre pour la disponibilité des achats - message
+@router.message(IsBuy(), F.text == "🎁 Acheter")
 @router.message(IsBuy(), StateFilter('here_item_count'))
 async def filter_buy_message(message: Message, bot: Bot, state: FSM, arSession: ARS):
     await state.clear()
 
-    await message.answer("<b>⛔ Покупки временно отключены.</b>")
+    await message.answer("<b>⛔ Les achats sont temporairement désactivés.</b>")
 
 
-# Фильтр на доступность покупок - колбэк
-@router.callback_query(IsBuy(), F.text.startswith(prohibit_buy))
+# Filtre pour la disponibilité des achats - callback
+@router.callback_query(IsBuy(), F.data.startswith(prohibit_buy))
 async def filter_buy_callback(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     await state.clear()
 
-    await call.answer("⛔ Покупки временно отключены.", True)
+    await call.answer("⛔ Les achats sont temporairement désactivés.", True)
 
 
 ################################################################################
-############################### СТАТУС ПОПОЛНЕНИЙ ##############################
-# Фильтр на доступность пополнения - сообщение
+############################### STATUT DES RECHARGES ###########################
+# Filtre pour la disponibilité des recharges - message
 @router.message(IsRefill(), StateFilter('here_pay_amount'))
 async def filter_refill_message(message: Message, bot: Bot, state: FSM, arSession: ARS):
     await state.clear()
 
-    await message.answer("<b>⛔ Пополнение временно отключено.</b>")
+    await message.answer("<b>⛔ La recharge est temporairement désactivée.</b>")
 
 
-# Фильтр на доступность пополнения - колбэк
-@router.callback_query(IsRefill(), F.text.startswith(prohibit_refill))
+# Filtre pour la disponibilité des recharges - callback
+@router.callback_query(IsRefill(), F.data.startswith(prohibit_refill))
 async def filter_refill_callback(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     await state.clear()
 
-    await call.answer("⛔ Пополнение временно отключено.", True)
+    await call.answer("⛔ La recharge est temporairement désactivée.", True)
 
 
 ################################################################################
-#################################### ПРОЧЕЕ ####################################
-# Открытие главного меню
-@router.message(F.text.in_(('🔙 Главное меню', '/start')))
+##################################### DIVERS ###################################
+# Ouverture du menu principal
+@router.message(F.text.in_(('🔙 Menu principal', '/start')))
 async def main_start(message: Message, bot: Bot, state: FSM, arSession: ARS):
     await state.clear()
 
     await message.answer(
         ded("""
-            🔸 Бот готов к использованию.
-            🔸 Если не появились вспомогательные кнопки
-            🔸 Введите /start
+            🔸 Le bot est prêt à être utilisé.
+            🔸 Si les boutons d'assistance ne s'affichent pas,
+            🔸 Tapez /start
         """),
         reply_markup=menu_frep(message.from_user.id),
     )

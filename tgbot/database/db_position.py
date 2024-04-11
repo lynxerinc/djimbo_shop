@@ -7,8 +7,7 @@ from tgbot.data.config import PATH_DATABASE
 from tgbot.database.db_helper import dict_factory, update_format_where, update_format
 from tgbot.utils.const_functions import ded, get_unix
 
-
-# Модель таблицы
+# Modèle de table
 class PositionModel(BaseModel):
     increment: int
     category_id: int
@@ -19,12 +18,11 @@ class PositionModel(BaseModel):
     position_photo: str
     position_unix: int
 
-
-# Работа с категориями
+# Gestion des positions
 class Positionx:
     storage_name = "storage_position"
 
-    # Добавление записи
+    # Ajout d'un enregistrement
     @staticmethod
     def add(
             category_id: int,
@@ -62,7 +60,7 @@ class Positionx:
                 ],
             )
 
-    # Получение записи
+    # Récupération d'un enregistrement
     @staticmethod
     def get(**kwargs) -> PositionModel:
         with sqlite3.connect(PATH_DATABASE) as con:
@@ -77,7 +75,7 @@ class Positionx:
 
             return response
 
-    # Получение записей
+    # Récupération de plusieurs enregistrements
     @staticmethod
     def gets(**kwargs) -> list[PositionModel]:
         with sqlite3.connect(PATH_DATABASE) as con:
@@ -92,7 +90,7 @@ class Positionx:
 
             return response
 
-    # Получение всех записей
+    # Récupération de tous les enregistrements
     @staticmethod
     def get_all() -> list[PositionModel]:
         with sqlite3.connect(PATH_DATABASE) as con:
@@ -106,7 +104,7 @@ class Positionx:
 
             return response
 
-    # Редактирование записи
+    # Modification d'un enregistrement
     @staticmethod
     def update(position_id, **kwargs):
         with sqlite3.connect(PATH_DATABASE) as con:
@@ -117,7 +115,7 @@ class Positionx:
 
             con.execute(sql + "WHERE position_id = ?", parameters)
 
-    # Удаление записи
+    # Suppression d'un enregistrement
     @staticmethod
     def delete(**kwargs):
         with sqlite3.connect(PATH_DATABASE) as con:
@@ -127,7 +125,7 @@ class Positionx:
 
             con.execute(sql, parameters)
 
-    # Очистка всех записей
+    # Nettoyage de tous les enregistrements
     @staticmethod
     def clear():
         with sqlite3.connect(PATH_DATABASE) as con:

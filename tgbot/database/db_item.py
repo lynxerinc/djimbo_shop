@@ -8,8 +8,7 @@ from tgbot.data.config import PATH_DATABASE
 from tgbot.database.db_helper import dict_factory, update_format_where, update_format
 from tgbot.utils.const_functions import ded, clear_list, gen_id, get_unix, clear_html
 
-
-# Модель таблицы
+# Modèle de table
 class ItemModel(BaseModel):
     user_id: int
     category_id: int
@@ -18,12 +17,11 @@ class ItemModel(BaseModel):
     item_unix: int
     item_data: str
 
-
-# Работа с категориями
+# Gestion des articles
 class Itemx:
     storage_name = "storage_item"
 
-    # Добавление записей
+    # Ajout d'entrées
     @staticmethod
     def add(
             user_id: int,
@@ -63,7 +61,7 @@ class Itemx:
                     ],
                 )
 
-    # Получение записи
+    # Récupération d'une entrée
     @staticmethod
     def get(**kwargs) -> ItemModel:
         with sqlite3.connect(PATH_DATABASE) as con:
@@ -78,7 +76,7 @@ class Itemx:
 
             return response
 
-    # Получение записей
+    # Récupération de plusieurs entrées
     @staticmethod
     def gets(**kwargs) -> list[ItemModel]:
         with sqlite3.connect(PATH_DATABASE) as con:
@@ -93,7 +91,7 @@ class Itemx:
 
             return response
 
-    # Получение всех записей
+    # Récupération de toutes les entrées
     @staticmethod
     def get_all() -> list[ItemModel]:
         with sqlite3.connect(PATH_DATABASE) as con:
@@ -107,7 +105,7 @@ class Itemx:
 
             return response
 
-    # Редактирование записи
+    # Modification d'une entrée
     @staticmethod
     def update(item_id, **kwargs):
         with sqlite3.connect(PATH_DATABASE) as con:
@@ -118,7 +116,7 @@ class Itemx:
 
             con.execute(sql + "WHERE item_id = ?", parameters)
 
-    # Удаление записи
+    # Suppression d'une entrée
     @staticmethod
     def delete(**kwargs):
         with sqlite3.connect(PATH_DATABASE) as con:
@@ -128,7 +126,7 @@ class Itemx:
 
             con.execute(sql, parameters)
 
-    # Очистка всех записей
+    # Nettoyage de toutes les entrées
     @staticmethod
     def clear():
         with sqlite3.connect(PATH_DATABASE) as con:
@@ -137,7 +135,7 @@ class Itemx:
 
             con.execute(sql)
 
-    # Покупка товара
+    # Achat d'article
     @staticmethod
     def buy(get_items: list[ItemModel], count: int) -> tuple[list[str], int]:
         with sqlite3.connect(PATH_DATABASE) as con:

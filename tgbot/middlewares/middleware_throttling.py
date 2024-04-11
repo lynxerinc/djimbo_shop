@@ -8,7 +8,7 @@ from aiogram.types import Message, User
 from cachetools import TTLCache
 
 
-# Антиспам
+# Anti-spam
 class ThrottlingMiddleware(BaseMiddleware):
     def __init__(self, default_rate: Union[int, float] = 1) -> None:
         self.default_rate = default_rate
@@ -50,7 +50,7 @@ class ThrottlingMiddleware(BaseMiddleware):
                     self.users[this_user.id]['now_rate'] = self.default_rate + 3
 
                     await event.reply(
-                        "<b>❗ Пожалуйста, не спамьте.\n"
+                        "<b>❗ Veuillez ne pas spammer.\n"
                         "❗ Please, do not spam.</b>",
                     )
                 elif self.users[this_user.id]['count_throttled'] == 2:
@@ -58,6 +58,6 @@ class ThrottlingMiddleware(BaseMiddleware):
                     self.users[this_user.id]['now_rate'] = self.default_rate + 5
 
                     await event.reply(
-                        "<b>❗ Бот не будет отвечать до прекращения спама.\n"
+                        "<b>❗ Le bot ne répondra pas tant que le spam ne s'arrête pas.\n"
                         "❗ The bot will not respond until the spam stops.</b>",
                     )

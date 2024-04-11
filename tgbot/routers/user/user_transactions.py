@@ -15,26 +15,26 @@ from tgbot.utils.const_functions import is_number, to_number, gen_id, ded
 from tgbot.utils.misc.bot_models import FSM, ARS
 from tgbot.utils.misc_functions import send_admins
 
-min_refill_rub = 10  # Минимальная сумма пополнения в рублях
+min_refill_rub = 10  # Montant minimal de recharge en roubles
 
 router = Router(name=__name__)
 
 
-# Выбор способа пополнения
+# Sélection du mode de recharge
 @router.callback_query(F.data == "user_refill")
 async def refill_method(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     get_payment = Paymentsx.get()
 
     if get_payment.way_qiwi == "False" and get_payment.way_yoomoney == "False":
-        return await call.answer("❗️ Пополнения временно недоступны", True)
+        return await call.answer("❗️ Les recharges sont temporairement indisponibles", True)
 
     await call.message.edit_text(
-        "<b>💰 Выберите способ пополнения</b>",
+        "<b>💰 Choisissez un mode de recharge</b>",
         reply_markup=refill_method_finl(),
     )
 
 
-# Выбор способа пополнения
+# Sélection du mode de recharge
 @router.callback_query(F.data.startswith("user_refill_method:"))
 async def refill_method_select(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     pay_method = call.data.split(":")[1]
@@ -42,28 +42,28 @@ async def refill_method_select(call: CallbackQuery, bot: Bot, state: FSM, arSess
     await state.update_data(here_pay_method=pay_method)
 
     await state.set_state("here_refill_amount")
-    await call.message.edit_text("<b>💰 Введите сумму пополнения</b>")
+    await call.message.edit_text("<b>💰 Entrez le montant de la recharge</b>")
 
 
 ################################################################################
-################################### ВВОД СУММЫ #################################
-# Принятие суммы для пополнения средств
+################################# ENTRÉE DU MONTANT ############################
+# Acceptation du montant de recharge
 @router.message(F.text, StateFilter("here_refill_amount"))
 async def refill_amount_get(message: Message, bot: Bot, state: FSM, arSession: ARS):
     if not is_number(message.text):
         return await message.answer(
-            "<b>❌ Данные были введены неверно.</b>\n"
-            "💰 Введите сумму для пополнения средств",
+            "<b>❌ Les données ont été entrées incorrectement.</b>\n"
+            "💰 Entrez le montant de la recharge",
         )
 
     if to_number(message.text) < min_refill_rub or to_number(message.text) > 100_000:
         return await message.answer(
-            f"<b>❌ Неверная сумма пополнения</b>\n"
-            f"❗️ Cумма не должна быть меньше <code>{min_refill_rub}₽</code> и больше <code>100 000₽</code>\n"
-            f"💰 Введите сумму для пополнения средств",
+            f"<b>❌ Montant de recharge incorrect</b>\n"
+            f"❗️ Le montant ne doit pas être inférieur à <code>{min_refill_rub}₽</code> et supérieur à <code>100 000₽</code>\n"
+            f"💰 Entrez le montant de la recharge",
         )
 
-    cache_message = await message.answer("<b>♻️ Подождите, платёж генерируется...</b>")
+    cache_message = await message.answer("<b>♻️ Attendez, le paiement est en cours de génération...</b>")
 
     pay_amount = to_number(message.text)
     pay_method = (await state.get_data())['here_pay_method']
@@ -92,8 +92,8 @@ async def refill_amount_get(message: Message, bot: Bot, state: FSM, arSession: A
 
 
 ################################################################################
-############################### ПРОВЕРКА ПЛАТЕЖЕЙ ##############################
-# Проверка оплаты - ЮMoney
+############################### VÉRIFICATION DES PAIEMENTS #####################
+# Vérification du paiement - Yoomoney
 @router.callback_query(F.data.startswith('Pay:Yoomoney'))
 async def refill_check_yoomoney(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     pay_way = call.data.split(":")[1]
@@ -119,18 +119,18 @@ async def refill_check_yoomoney(call: CallbackQuery, bot: Bot, state: FSM, arSes
                 pay_comment=pay_receipt,
             )
         else:
-            await call.answer("❗ Ваше пополнение уже зачислено.", True, cache_time=60)
+            await call.answer("❗ Votre recharge a déjà été créditée.", True, cache_time=60)
     elif pay_status == 1:
-        await call.answer("❗️ Не удалось проверить платёж. Попробуйте позже", True, cache_time=5)
+        await call.answer("❗️ Échec de la vérification du paiement. Essayez plus tard", True, cache_time=5)
     elif pay_status == 2:
-        await call.answer("❗️ Платёж не был найден. Попробуйте позже", True, cache_time=5)
+        await call.answer("❗️ Paiement non trouvé. Essayez plus tard.", True, cache_time=5)
     elif pay_status == 3:
-        await call.answer("❗️ Оплата была произведена не в рублях", True, cache_time=5)
+        await call.answer("❗️ Le paiement a été effectué dans une autre devise", True, cache_time=5)
     else:
-        await call.answer(f"❗ Неизвестная ошибка {pay_status}. Обратитесь в поддержку.", True, cache_time=5)
+        await call.answer(f"❗ Erreur inconnue {pay_status}. Contactez le support.", True, cache_time=5)
 
 
-# Проверка оплаты - QIWI
+# Vérification du paiement - QIWI
 @router.callback_query(F.data.startswith('Pay:QIWI'))
 async def refill_check_qiwi(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     pay_way = call.data.split(":")[1]
@@ -156,20 +156,20 @@ async def refill_check_qiwi(call: CallbackQuery, bot: Bot, state: FSM, arSession
                 pay_comment=pay_receipt,
             )
         else:
-            await call.answer("❗ Ваше пополнение уже зачислено.", True, cache_time=60)
+            await call.answer("❗ Votre recharge a déjà été créditée.", True, cache_time=60)
     elif pay_status == 1:
-        await call.answer("❗️ Не удалось проверить платёж. Попробуйте позже", True, cache_time=5)
+        await call.answer("❗️ Échec de la vérification du paiement. Essayez plus tard", True, cache_time=5)
     elif pay_status == 2:
-        await call.answer("❗ Платёж не был найден. Попробуйте позже.", True, cache_time=5)
+        await call.answer("❗ Paiement non trouvé. Essayez plus tard.", True, cache_time=5)
     elif pay_status == 3:
-        await call.answer("❗ Оплата была произведена не в рублях.", True, cache_time=5)
+        await call.answer("❗ Le paiement a été effectué dans une autre devise.", True, cache_time=5)
     else:
-        await call.answer(f"❗ Неизвестная ошибка {pay_status}. Обратитесь в поддержку.", True, cache_time=5)
+        await call.answer(f"❗ Erreur inconnue {pay_status}. Contactez le support.", True, cache_time=5)
 
 
 ################################################################################
-#################################### ПРОЧЕЕ ####################################
-# Зачисление средств
+#################################### DIVERS ####################################
+# Crédit des fonds
 async def refill_success(
         bot: Bot,
         call: CallbackQuery,
@@ -201,16 +201,16 @@ async def refill_success(
 
     await call.message.edit_text(
         ded(f"""
-            <b>💰 Вы пополнили баланс на сумму <code>{pay_amount}₽</code>. Удачи ❤️
-            🧾 Чек: <code>#{pay_receipt}</code></b>
+            <b>💰 Vous avez rechargé votre solde de <code>{pay_amount}₽</code>. Bonne chance ❤️
+            🧾 Reçu : <code>#{pay_receipt}</code></b>
         """)
     )
 
     await send_admins(
         bot,
         ded(f"""
-            👤 Пользователь: <b>@{get_user.user_login}</b> | <a href='tg://user?id={get_user.user_id}'>{get_user.user_name}</a> | <code>{get_user.user_id}</code>
-            💰 Сумма пополнения: <code>{pay_amount}₽</code>
-            🧾 Чек: <code>#{pay_receipt}</code>
+            👤 Utilisateur : <b>@{get_user.user_login}</b> | <a href='tg://user?id={get_user.user_id}'>{get_user.user_name}</a> | <code>{get_user.user_id}</code>
+            💰 Montant de la recharge : <code>{pay_amount}₽</code>
+            🧾 Reçu : <code>#{pay_receipt}</code>
         """)
     )

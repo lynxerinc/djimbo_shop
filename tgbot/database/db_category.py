@@ -7,20 +7,18 @@ from tgbot.data.config import PATH_DATABASE
 from tgbot.database.db_helper import dict_factory, update_format_where, update_format
 from tgbot.utils.const_functions import ded, get_unix
 
-
-# Модель таблицы
+# Modèle de table
 class CategoryModel(BaseModel):
     increment: int
     category_id: int
     category_name: str
     category_unix: int
 
-
-# Работа с категориями
+# Gestion des catégories
 class Categoryx:
     storage_name = "storage_category"
 
-    # Добавление записи
+    # Ajout d'une entrée
     @staticmethod
     def add(
             category_id: int,
@@ -46,7 +44,7 @@ class Categoryx:
                 ],
             )
 
-    # Получение записи
+    # Récupération d'une entrée
     @staticmethod
     def get(**kwargs) -> CategoryModel:
         with sqlite3.connect(PATH_DATABASE) as con:
@@ -61,7 +59,7 @@ class Categoryx:
 
             return response
 
-    # Получение записей
+    # Récupération de plusieurs entrées
     @staticmethod
     def gets(**kwargs) -> list[CategoryModel]:
         with sqlite3.connect(PATH_DATABASE) as con:
@@ -76,7 +74,7 @@ class Categoryx:
 
             return response
 
-    # Получение всех записей
+    # Récupération de toutes les entrées
     @staticmethod
     def get_all() -> list[CategoryModel]:
         with sqlite3.connect(PATH_DATABASE) as con:
@@ -90,7 +88,7 @@ class Categoryx:
 
             return response
 
-    # Редактирование записи
+    # Modification d'une entrée
     @staticmethod
     def update(category_id, **kwargs):
         with sqlite3.connect(PATH_DATABASE) as con:
@@ -101,7 +99,7 @@ class Categoryx:
 
             con.execute(sql + "WHERE category_id = ?", parameters)
 
-    # Удаление записи
+    # Suppression d'une entrée
     @staticmethod
     def delete(**kwargs):
         with sqlite3.connect(PATH_DATABASE) as con:
@@ -111,7 +109,7 @@ class Categoryx:
 
             con.execute(sql, parameters)
 
-    # Очистка всех записей
+    # Nettoyage de toutes les entrées
     @staticmethod
     def clear():
         with sqlite3.connect(PATH_DATABASE) as con:

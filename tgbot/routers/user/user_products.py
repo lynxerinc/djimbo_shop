@@ -19,18 +19,18 @@ from tgbot.utils.text_functions import position_open_user
 router = Router(name=__name__)
 
 
-# Страницы выбора категории для покупки товара
+# Pages de choix de catégorie pour l'achat de produits
 @router.callback_query(F.data.startswith("buy_category_swipe:"))
 async def user_buy_category_swipe(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     remover = int(call.data.split(":")[1])
 
     await call.message.edit_text(
-        "<b>🎁 Выберите нужный вам товар:</b>",
+        "<b>🎁 Choisissez le produit que vous souhaitez :</b>",
         reply_markup=prod_item_category_swipe_fp(remover),
     )
 
 
-# Открытие категории с выбором позиции для покупки товара
+# Ouverture de catégorie avec choix de position pour l'achat de produit
 @router.callback_query(F.data.startswith("buy_category_open:"))
 async def user_buy_category_open(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     category_id = call.data.split(":")[1]
@@ -43,22 +43,22 @@ async def user_buy_category_open(call: CallbackQuery, bot: Bot, state: FSM, arSe
         await del_message(call.message)
 
         await call.message.answer(
-            f"<b>🎁 Текущая категория: <code>{get_category.category_name}</code></b>",
+            f"<b>🎁 Catégorie actuelle : <code>{get_category.category_name}</code></b>",
             reply_markup=prod_item_position_swipe_fp(remover, category_id),
         )
     else:
         if remover == 0:
-            await call.message.edit_text("<b>🎁 Увы, товары в данное время отсутствуют.</b>")
-            await call.answer("❗ Позиции были изменены или удалены")
+            await call.message.edit_text("<b>🎁 Désolé, il n'y a pas de produits disponibles en ce moment.</b>")
+            await call.answer("❗ Les positions ont été modifiées ou supprimées")
         else:
             await call.answer(
-                f"❕ Товары в категории {get_category.category_name} отсутствуют",
+                f"❕ Il n'y a pas de produits dans la catégorie {get_category.category_name}",
                 True,
                 cache_time=5,
             )
 
 
-# Страницы выбора позиции для покупки товара
+# Pages de choix de position pour l'achat de produit
 @router.callback_query(F.data.startswith("buy_position_swipe:"))
 async def user_buy_position_swipe(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     category_id = call.data.split(":")[1]
@@ -68,12 +68,12 @@ async def user_buy_position_swipe(call: CallbackQuery, bot: Bot, state: FSM, arS
 
     await del_message(call.message)
     await call.message.answer(
-        f"<b>🎁 Текущая категория: <code>{get_category.category_name}</code></b>",
+        f"<b>🎁 Catégorie actuelle : <code>{get_category.category_name}</code></b>",
         reply_markup=prod_item_position_swipe_fp(remover, category_id),
     )
 
 
-# Открытие позиции для покупки
+# Ouverture de position pour l'achat
 @router.callback_query(F.data.startswith("buy_position_open:"))
 async def user_buy_position_open(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     position_id = call.data.split(":")[1]
@@ -85,8 +85,8 @@ async def user_buy_position_open(call: CallbackQuery, bot: Bot, state: FSM, arSe
     await position_open_user(bot, call.from_user.id, position_id, remover)
 
 
-#################################### ПОКУПКА ###################################
-# Выбор количества товаров для покупки
+#################################### ACHAT ###################################
+# Choix du nombre de produits à acheter
 @router.callback_query(F.data.startswith("buy_item_open:"))
 async def user_buy_open(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     position_id = call.data.split(":")[1]
@@ -96,14 +96,14 @@ async def user_buy_open(call: CallbackQuery, bot: Bot, state: FSM, arSession: AR
     get_items = Itemx.gets(position_id=position_id)
     get_user = Userx.get(user_id=call.from_user.id)
 
-    # Проверка, имеется ли на балансе пользователя достаточно средств
+    # Vérification si le solde de l'utilisateur est suffisant
     if int(get_user.user_balance) < int(get_position.position_price):
-        return await call.answer("❗ У вас недостаточно средств. Пополните баланс", True)
+        return await call.answer("❗ Vous n'avez pas assez de fonds. Veuillez recharger votre solde", True)
 
     if len(get_items) < 1:
-        return await call.answer("❗ Товаров нет в наличии", True)
+        return await call.answer("❗ Il n'y a pas de produits disponibles", True)
 
-    # Максимальное количество товаров к покупке, подстроенные под баланс пользователя
+    # Nombre maximum de produits pouvant être achetés, ajusté selon le solde de l'utilisateur
     if get_position.position_price != 0:
         get_count = round(int(get_user.user_balance / get_position.position_price), 2)
 
@@ -114,7 +114,7 @@ async def user_buy_open(call: CallbackQuery, bot: Bot, state: FSM, arSession: AR
     else:
         get_items = len(get_items)
 
-    # Если в наличии всего один товар, то пропустить ввод количества товаров к покупке
+    # Si un seul produit est disponible, passer la saisie du nombre de produits à acheter
     if get_items == 1:
         await state.clear()
 
@@ -122,11 +122,11 @@ async def user_buy_open(call: CallbackQuery, bot: Bot, state: FSM, arSession: AR
 
         await call.message.answer(
             ded(f"""
-                <b>🎁 Вы действительно хотите купить товар(ы)?</b>
+                <b>🎁 Voulez-vous vraiment acheter le(s) produit(s) ?</b>
                 ➖➖➖➖➖➖➖➖➖➖
-                ▪️ Товар: <code>{get_position.position_name}</code>
-                ▪️ Количество: <code>1шт</code>
-                ▪️ Сумма к покупке: <code>{get_position.position_price}₽</code>
+                ▪️ Produit : <code>{get_position.position_name}</code>
+                ▪️ Quantité : <code>1pc</code>
+                ▪️ Somme à payer : <code>{get_position.position_price}€</code>
             """),
             reply_markup=products_confirm_finl(position_id, get_position.category_id, 1),
         )
@@ -138,17 +138,17 @@ async def user_buy_open(call: CallbackQuery, bot: Bot, state: FSM, arSession: AR
 
         await call.message.answer(
             ded(f"""
-                <b>🎁 Введите количество товаров для покупки</b>
-                ❕ От <code>1</code> до <code>{get_items}</code>
+                <b>🎁 Entrez le nombre de produits à acheter</b>
+                ❕ De <code>1</code> à <code>{get_items}</code>
                 ➖➖➖➖➖➖➖➖➖➖
-                ▪️ Товар: <code>{get_position.position_name}</code> - <code>{get_position.position_price}₽</code>
-                ▪️ Ваш баланс: <code>{get_user.user_balance}₽</code>
+                ▪️ Produit : <code>{get_position.position_name}</code> - <code>{get_position.position_price}€</code>
+                ▪️ Votre solde : <code>{get_user.user_balance}€</code>
             """),
             reply_markup=products_return_finl(position_id, get_position.category_id),
         )
 
 
-# Принятие количества товаров для покупки
+# Acceptation du nombre de produits à acheter
 @router.message(F.text, StateFilter("here_item_count"))
 async def user_buy_count(message: Message, bot: Bot, state: FSM, arSession: ARS):
     position_id = (await state.get_data())['here_buy_position_id']
@@ -157,7 +157,7 @@ async def user_buy_count(message: Message, bot: Bot, state: FSM, arSession: ARS)
     get_user = Userx.get(user_id=message.from_user.id)
     get_items = Itemx.gets(position_id=position_id)
 
-    # Максимальное количество товаров к покупке, подстроенные под баланс пользователя
+    # Nombre maximum de produits pouvant être achetés, ajusté selon le solde de l'utilisateur
     if get_position.position_price != 0:
         get_count = int(get_user.user_balance / get_position.position_price)
 
@@ -167,39 +167,39 @@ async def user_buy_count(message: Message, bot: Bot, state: FSM, arSession: ARS)
         get_count = len(get_items)
 
     send_message = ded(f"""
-        🎁 Введите количество товаров для покупки
-        ❕ От <code>1</code> до <code>{get_count}</code>
+        🎁 Entrez le nombre de produits à acheter
+        ❕ De <code>1</code> à <code>{get_count}</code>
         ➖➖➖➖➖➖➖➖➖➖
-        ▪️ Товар: <code>{get_position.position_name}</code> - <code>{get_position.position_price}₽</code>
-        ▪️ Ваш баланс: <code>{get_user.user_balance}₽</code>
+        ▪️ Produit : <code>{get_position.position_name}</code> - <code>{get_position.position_price}€</code>
+        ▪️ Votre solde : <code>{get_user.user_balance}€</code>
     """)
 
-    # Если было введено не число
+    # Si un nombre n'a pas été entré
     if not message.text.isdigit():
         return await message.answer(
-            f"<b>❌ Данные были введены неверно.</b>\n" + send_message,
+            f"<b>❌ Les données ont été entrées incorrectement.</b>\n" + send_message,
             reply_markup=products_return_finl(position_id, get_position.category_id),
         )
 
     get_count = int(message.text)
     amount_pay = round(get_position.position_price * get_count, 2)
 
-    # Если товаров нет в наличии
+    # Si il n'y a pas de produits disponibles
     if len(get_items) < 1:
         await state.clear()
-        return await message.answer("<b>🎁 Товар который вы хотели купить, закончился</b>")
+        return await message.answer("<b>🎁 Le produit que vous vouliez acheter est épuisé</b>")
 
-    # Если товаров меньше 1 или меньше наличия
+    # Si le nombre de produits est inférieur à 1 ou supérieur à la disponibilité
     if get_count < 1 or get_count > len(get_items):
         return await message.answer(
-            f"<b>❌ Неверное количество товаров.</b>\n" + send_message,
+            f"<b>❌ Quantité de produits incorrecte.</b>\n" + send_message,
             reply_markup=products_return_finl(position_id, get_position.category_id),
         )
 
-    # Если баланс пользователя меньше, чем цена покупки
+    # Si le solde de l'utilisateur est inférieur au prix total de l'achat
     if int(get_user.user_balance) < amount_pay:
         return await message.answer(
-            f"<b>❌ Недостаточно средств на счете.</b>\n" + send_message,
+            f"<b>❌ Fonds insuffisants sur votre compte.</b>\n" + send_message,
             reply_markup=products_return_finl(position_id, get_position.category_id),
         )
 
@@ -207,17 +207,17 @@ async def user_buy_count(message: Message, bot: Bot, state: FSM, arSession: ARS)
 
     await message.answer(
         ded(f"""
-            <b>🎁 Вы действительно хотите купить товар(ы)?</b>
+            <b>🎁 Voulez-vous vraiment acheter le(s) produit(s) ?</b>
             ➖➖➖➖➖➖➖➖➖➖
-            ▪️ Товар: <code>{get_position.position_name}</code>
-            ▪️ Количество: <code>{get_count}шт</code>
-            ▪️ Сумма к покупке: <code>{amount_pay}₽</code>
+            ▪️ Produit : <code>{get_position.position_name}</code>
+            ▪️ Quantité : <code>{get_count}pcs</code>
+            ▪️ Somme totale : <code>{amount_pay}€</code>
         """),
         reply_markup=products_confirm_finl(position_id, get_position.category_id, get_count),
     )
 
 
-# Подтверждение покупки товара
+# Confirmation de l'achat du produit
 @router.callback_query(F.data.startswith("buy_item_confirm:"))
 async def user_buy_confirm(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     position_id = int(call.data.split(":")[1])
@@ -225,13 +225,13 @@ async def user_buy_confirm(call: CallbackQuery, bot: Bot, state: FSM, arSession:
 
     get_items = Itemx.gets(position_id=position_id)
 
-    # Проверка наличия нужного количества товаров
+    # Vérification de la disponibilité du nombre requis de produits
     if purchase_count > len(get_items):
         return await call.message.edit_text(
-            "<b>🎁 Товар который вы хотели купить закончился или изменился.</b>",
+            "<b>🎁 Le produit que vous souhaitiez acheter est épuisé ou a été modifié.</b>",
         )
 
-    await call.message.edit_text("<b>🔄 Ждите, товары подготавливаются</b>")
+    await call.message.edit_text("<b>🔄 Attendez, les produits sont en préparation</b>")
 
     get_position = Positionx.get(position_id=position_id)
     get_category = Categoryx.get(category_id=get_position.category_id)
@@ -239,14 +239,14 @@ async def user_buy_confirm(call: CallbackQuery, bot: Bot, state: FSM, arSession:
 
     purchase_price = round(get_position.position_price * purchase_count, 2)
 
-    # Проверка баланса пользователя и общей суммы покупки
+    # Vérification du solde de l'utilisateur et du montant total de l'achat
     if get_user.user_balance < purchase_price:
-        return await call.message.answer("<b>❗ На вашем счёте недостаточно средств</b>")
+        return await call.message.answer("<b>❗ Vous n'avez pas assez de fonds sur votre compte</b>")
 
     save_items, save_len = Itemx.buy(get_items, purchase_count)
     save_count = len(save_items)
 
-    # Если в наличии оказалось меньше товаров, чем было запрошено
+    # Si le stock s'avère inférieur au nombre demandé
     if purchase_count != save_count:
         purchase_price = round(get_position.position_price * save_count, 2)
         purchase_count = save_count
@@ -283,11 +283,11 @@ async def user_buy_confirm(call: CallbackQuery, bot: Bot, state: FSM, arSession:
 
     await call.message.answer(
         ded(f"""
-            <b>✅ Вы успешно купили товар(ы)</b>
+            <b>✅ Vous avez réussi à acheter le(s) produit(s)</b>
             ➖➖➖➖➖➖➖➖➖➖
-            ▪️ Чек: <code>#{purchase_receipt}</code>
-            ▪️ Товар: <code>{get_position.position_name} | {purchase_count}шт | {purchase_price}₽</code>
-            ▪️ Дата покупки: <code>{convert_date(purchase_unix)}</code>
+            ▪️ Reçu : <code>#{purchase_receipt}</code>
+            ▪️ Produit : <code>{get_position.position_name} | {purchase_count}pcs | {purchase_price}€</code>
+            ▪️ Date d'achat : <code>{convert_date(purchase_unix)}</code>
         """),
         reply_markup=menu_frep(call.from_user.id),
     )

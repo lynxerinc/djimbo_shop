@@ -6,8 +6,7 @@ from pydantic import BaseModel
 from tgbot.data.config import PATH_DATABASE
 from tgbot.database.db_helper import dict_factory, update_format
 
-
-# Модель таблицы
+# Modèle de la table
 class SettingsModel(BaseModel):
     status_work: str
     status_refill: str
@@ -20,12 +19,11 @@ class SettingsModel(BaseModel):
     misc_profit_week: int
     misc_profit_month: int
 
-
-# Работа с настройками
+# Gestion des paramètres
 class Settingsx:
     storage_name = "storage_settings"
 
-    # Получение записи
+    # Récupération d'un enregistrement
     @staticmethod
     def get() -> SettingsModel:
         with sqlite3.connect(PATH_DATABASE) as con:
@@ -34,7 +32,7 @@ class Settingsx:
 
             return SettingsModel(**con.execute(sql).fetchone())
 
-    # Редактирование записи
+    # Modification d'un enregistrement
     @staticmethod
     def update(**kwargs):
         with sqlite3.connect(PATH_DATABASE) as con:

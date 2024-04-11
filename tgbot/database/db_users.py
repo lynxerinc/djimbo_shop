@@ -7,8 +7,7 @@ from tgbot.data.config import PATH_DATABASE
 from tgbot.database.db_helper import dict_factory, update_format_where, update_format
 from tgbot.utils.const_functions import get_unix, ded
 
-
-# Модель таблицы
+# Modèle de la table
 class UserModel(BaseModel):
     increment: int
     user_id: int
@@ -19,12 +18,11 @@ class UserModel(BaseModel):
     user_give: float
     user_unix: int
 
-
-# Работа с юзером
+# Gestion des utilisateurs
 class Userx:
     storage_name = "storage_users"
 
-    # Добавление записи
+    # Ajout d'un enregistrement
     @staticmethod
     def add(
             user_id: int,
@@ -62,7 +60,7 @@ class Userx:
                 ],
             )
 
-    # Получение записи
+    # Récupération d'un enregistrement
     @staticmethod
     def get(**kwargs) -> UserModel:
         with sqlite3.connect(PATH_DATABASE) as con:
@@ -77,7 +75,7 @@ class Userx:
 
             return response
 
-    # Получение записей
+    # Récupération de plusieurs enregistrements
     @staticmethod
     def gets(**kwargs) -> list[UserModel]:
         with sqlite3.connect(PATH_DATABASE) as con:
@@ -92,7 +90,7 @@ class Userx:
 
             return response
 
-    # Получение всех записей
+    # Récupération de tous les enregistrements
     @staticmethod
     def get_all() -> list[UserModel]:
         with sqlite3.connect(PATH_DATABASE) as con:
@@ -106,7 +104,7 @@ class Userx:
 
             return response
 
-    # Редактирование записи
+    # Modification d'un enregistrement
     @staticmethod
     def update(user_id, **kwargs):
         with sqlite3.connect(PATH_DATABASE) as con:
@@ -117,7 +115,7 @@ class Userx:
 
             con.execute(sql + "WHERE user_id = ?", parameters)
 
-    # Удаление записи
+    # Suppression d'un enregistrement
     @staticmethod
     def delete(**kwargs):
         with sqlite3.connect(PATH_DATABASE) as con:
@@ -127,7 +125,7 @@ class Userx:
 
             con.execute(sql, parameters)
 
-    # Очистка всех записей
+    # Nettoyage de tous les enregistrements
     @staticmethod
     def clear():
         with sqlite3.connect(PATH_DATABASE) as con:

@@ -20,8 +20,7 @@ from tgbot.utils.misc_functions import (check_update, check_bot_username, startu
 
 colorama.init()
 
-
-# Запуск шедулеров
+# Démarrage des planificateurs
 async def scheduler_start(bot: Bot, arSession: ARS):
     BOT_SCHEDULER.add_job(update_profit_month, trigger="cron", day=1, hour=00, minute=00, second=5)
     BOT_SCHEDULER.add_job(update_profit_week, trigger="cron", day_of_week="mon", hour=00, minute=00, second=10)
@@ -30,32 +29,31 @@ async def scheduler_start(bot: Bot, arSession: ARS):
     BOT_SCHEDULER.add_job(check_update, trigger="cron", hour=00, args=(bot, arSession,))
     BOT_SCHEDULER.add_job(check_mail, trigger="cron", hour=12, args=(bot, arSession,))
 
-
-# Запуск бота и базовых функций
+# Démarrage du bot et des fonctions de base
 async def main():
-    BOT_SCHEDULER.start()  # Запуск Шедулера
-    dp = Dispatcher()  # Образ Диспетчера
-    arSession = AsyncRequestSession()  # Пул асинхронной сессии запросов
-    bot = Bot(token=BOT_TOKEN, parse_mode="HTML")  # Образ Бота
+    BOT_SCHEDULER.start()  # Démarrage du Planificateur
+    dp = Dispatcher()  # Instance du Dispatcheur
+    arSession = AsyncRequestSession()  # Pool de session de requêtes asynchrones
+    bot = Bot(token=BOT_TOKEN, parse_mode="HTML")  # Instance du Bot
 
-    register_all_middlwares(dp)  # Регистрация всех мидлварей
-    register_all_routers(dp)  # Регистрация всех роутеров
+    register_all_middlwares(dp)  # Enregistrement de tous les middlewares
+    register_all_routers(dp)  # Enregistrement de tous les routeurs
 
     try:
-        await autosettings_unix()  # Автонастройка UNIX времени в БД
-        await set_commands(bot)  # Установка команд
-        await check_bot_username(bot)  # Проверка юзернейма бота в БД
-        await check_update(bot, arSession)  # Проверка обновлений
-        await check_mail(bot, arSession)  # Оповещение обновлений
-        await startup_notify(bot, arSession)  # Рассылка при запуске бота
-        await scheduler_start(bot, arSession)  # Подключение шедулеров
+        await autosettings_unix()  # Configuration automatique de l'heure UNIX dans la DB
+        await set_commands(bot)  # Configuration des commandes
+        await check_bot_username(bot)  # Vérification du nom d'utilisateur du bot dans la DB
+        await check_update(bot, arSession)  # Vérification des mises à jour
+        await check_mail(bot, arSession)  # Notification des mises à jour
+        await startup_notify(bot, arSession)  # Notifications au démarrage du bot
+        await scheduler_start(bot, arSession)  # Connexion des planificateurs
 
-        bot_logger.warning("BOT WAS STARTED")
-        print(colorama.Fore.LIGHTYELLOW_EX + f"~~~~~ Bot was started - @{(await bot.get_me()).username} ~~~~~")
-        print(colorama.Fore.LIGHTBLUE_EX + "~~~~~ TG developer - @djimbox ~~~~~")
+        bot_logger.warning("LE BOT A ÉTÉ DÉMARRÉ")
+        print(colorama.Fore.LIGHTYELLOW_EX + f"~~~~~ Le bot a été démarré - @{(await bot.get_me()).username} ~~~~~")
+        print(colorama.Fore.LIGHTBLUE_EX + "~~~~~ Développeur TG - @djimbox ~~~~~")
         print(colorama.Fore.RESET)
 
-        if len(get_admins()) == 0: print("***** ENTER ADMIN ID IN settings.ini *****")
+        if len(get_admins()) == 0: print("***** ENTREZ L'ID DE L'ADMINISTRATEUR DANS settings.ini *****")
 
         await bot.delete_webhook()
         await bot.get_updates(offset=-1)
@@ -69,14 +67,13 @@ async def main():
         await arSession.close()
         await bot.session.close()
 
-
 if __name__ == "__main__":
-    create_dbx()  # Генерация БД и таблиц
+    create_dbx()  # Génération de la DB et des tables
 
     try:
         asyncio.run(main())
     except (KeyboardInterrupt, SystemExit):
-        bot_logger.warning("Bot was stopped")
+        bot_logger.warning("Le bot a été arrêté")
     finally:
         if sys.platform.startswith("win"):
             os.system("cls")

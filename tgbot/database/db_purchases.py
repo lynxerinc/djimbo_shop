@@ -8,8 +8,7 @@ from tgbot.data.config import PATH_DATABASE
 from tgbot.database.db_helper import dict_factory, update_format_where, update_format
 from tgbot.utils.const_functions import ded, get_unix
 
-
-# Модель таблицы
+# Modèle de la table
 class PurchasesModel(BaseModel):
     increment: int
     user_id: int
@@ -26,12 +25,11 @@ class PurchasesModel(BaseModel):
     purchase_category_name: str
     purchase_unix: int
 
-
-# Работа с категориями
+# Gestion des achats
 class Purchasesx:
     storage_name = "storage_purchases"
 
-    # Добавление записи
+    # Ajout d'un enregistrement
     @staticmethod
     def add(
             user_id: int,
@@ -87,7 +85,7 @@ class Purchasesx:
                 ],
             )
 
-    # Получение записи
+    # Récupération d'un enregistrement
     @staticmethod
     def get(**kwargs) -> PurchasesModel:
         with sqlite3.connect(PATH_DATABASE) as con:
@@ -102,7 +100,7 @@ class Purchasesx:
 
             return response
 
-    # Получение записей
+    # Récupération de plusieurs enregistrements
     @staticmethod
     def gets(**kwargs) -> list[PurchasesModel]:
         with sqlite3.connect(PATH_DATABASE) as con:
@@ -117,7 +115,7 @@ class Purchasesx:
 
             return response
 
-    # Получение всех записей
+    # Récupération de tous les enregistrements
     @staticmethod
     def get_all() -> list[PurchasesModel]:
         with sqlite3.connect(PATH_DATABASE) as con:
@@ -131,7 +129,7 @@ class Purchasesx:
 
             return response
 
-    # Редактирование записи
+    # Modification d'un enregistrement
     @staticmethod
     def update(purchase_receipt, **kwargs):
         with sqlite3.connect(PATH_DATABASE) as con:
@@ -142,7 +140,7 @@ class Purchasesx:
 
             con.execute(sql + "WHERE purchase_receipt = ?", parameters)
 
-    # Удаление записи
+    # Suppression d'un enregistrement
     @staticmethod
     def delete(**kwargs):
         with sqlite3.connect(PATH_DATABASE) as con:
@@ -152,7 +150,7 @@ class Purchasesx:
 
             con.execute(sql, parameters)
 
-    # Очистка всех записей
+    # Nettoyage de tous les enregistrements
     @staticmethod
     def clear():
         with sqlite3.connect(PATH_DATABASE) as con:

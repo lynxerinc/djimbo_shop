@@ -7,179 +7,179 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 from tgbot.utils.const_functions import ikb
 
 
-################################### КАТЕГОРИИ ##################################
-# Изменение категории
+################################### CATÉGORIES ##################################
+# Modification de catégorie
 def category_edit_open_finl(category_id, remover) -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardBuilder()
 
     keyboard.row(
-        ikb("▪️ Изм. Название", data=f"category_edit_name:{category_id}:{remover}"),
-        ikb("▪️ Добавить позицию", data=f"position_add_open:{category_id}"),
+        ikb("▪️ Modifier le nom", data=f"category_edit_name:{category_id}:{remover}"),
+        ikb("▪️ Ajouter une position", data=f"position_add_open:{category_id}"),
     ).row(
-        ikb("🔙 Вернуться", data=f"catategory_edit_swipe:{remover}"),
-        ikb("▪️ Удалить", data=f"category_edit_delete:{category_id}:{remover}")
+        ikb("🔙 Retour", data=f"catategory_edit_swipe:{remover}"),
+        ikb("▪️ Supprimer", data=f"category_edit_delete:{category_id}:{remover}")
     )
 
     return keyboard.as_markup()
 
 
-# Подтверждение удаления категории
+# Confirmation de la suppression de la catégorie
 def category_edit_delete_finl(category_id, remover) -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardBuilder()
 
     keyboard.row(
-        ikb("✅ Да, удалить", data=f"category_edit_delete_confirm:{category_id}:{remover}"),
-        ikb("❌ Нет, отменить", data=f"category_edit_open:{category_id}:{remover}")
+        ikb("✅ Oui, supprimer", data=f"category_edit_delete_confirm:{category_id}:{remover}"),
+        ikb("❌ Non, annuler", data=f"category_edit_open:{category_id}:{remover}")
     )
 
     return keyboard.as_markup()
 
 
-# Отмена изменения категории и возвращение
+# Annulation de la modification de la catégorie et retour
 def category_edit_cancel_finl(category_id, remover) -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardBuilder()
 
     keyboard.row(
-        ikb("❌ Отменить", data=f"category_edit_open:{category_id}:{remover}"),
+        ikb("❌ Annuler", data=f"category_edit_open:{category_id}:{remover}"),
     )
 
     return keyboard.as_markup()
 
 
-#################################### ПОЗИЦИИ ###################################
-# Кнопки при открытии позиции для изменения
+#################################### POSITIONS ###################################
+# Boutons lors de l'ouverture d'une position pour modification
 def position_edit_open_finl(position_id, category_id, remover) -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardBuilder()
 
     keyboard.row(
-        ikb("▪️ Изм. Название", data=f"position_edit_name:{position_id}:{category_id}:{remover}"),
-        ikb("▪️ Изм. цену", data=f"position_edit_price:{position_id}:{category_id}:{remover}"),
+        ikb("▪️ Modifier le nom", data=f"position_edit_name:{position_id}:{category_id}:{remover}"),
+        ikb("▪️ Modifier le prix", data=f"position_edit_price:{position_id}:{category_id}:{remover}"),
     ).row(
-        ikb("▪️ Изм. Описание", data=f"position_edit_desc:{position_id}:{category_id}:{remover}"),
-        ikb("▪️ Изм. Фото", data=f"position_edit_photo:{position_id}:{category_id}:{remover}"),
+        ikb("▪️ Modifier la description", data=f"position_edit_desc:{position_id}:{category_id}:{remover}"),
+        ikb("▪️ Modifier la photo", data=f"position_edit_photo:{position_id}:{category_id}:{remover}"),
     ).row(
-        ikb("▪️ Добавить Товары", data=f"item_add_position_open:{position_id}:{category_id}"),
-        ikb("▪️ Выгрузить Товары", data=f"position_edit_items:{position_id}:{category_id}:{remover}"),
+        ikb("▪️ Ajouter des produits", data=f"item_add_position_open:{position_id}:{category_id}"),
+        ikb("▪️ Exporter les produits", data=f"position_edit_items:{position_id}:{category_id}:{remover}"),
     ).row(
-        ikb("▪️ Очистить Товары", data=f"position_edit_clear:{position_id}:{category_id}:{remover}"),
-        ikb("▪️ Удалить Товар", data=f"item_delete_swipe:{position_id}:{category_id}:0"),
+        ikb("▪️ Vider les produits", data=f"position_edit_clear:{position_id}:{category_id}:{remover}"),
+        ikb("▪️ Supprimer un produit", data=f"item_delete_swipe:{position_id}:{category_id}:0"),
     ).row(
-        ikb("▪️ Удалить Позицию", data=f"position_edit_delete:{position_id}:{category_id}:{remover}"),
+        ikb("▪️ Supprimer la position", data=f"position_edit_delete:{position_id}:{category_id}:{remover}"),
     ).row(
-        ikb("🔙 Вернуться", data=f"position_edit_swipe:{category_id}:{remover}"),
-        ikb("▪️ Обновить", data=f"position_edit_open:{position_id}:{category_id}:{remover}"),
+        ikb("🔙 Retour", data=f"position_edit_swipe:{category_id}:{remover}"),
+        ikb("▪️ Actualiser", data=f"position_edit_open:{position_id}:{category_id}:{remover}"),
     )
 
     return keyboard.as_markup()
 
 
-# Подтверждение удаления позиции
+# Confirmation de la suppression de la position
 def position_edit_delete_finl(position_id, category_id, remover) -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardBuilder()
 
     keyboard.row(
-        ikb("✅ Да, удалить", data=f"position_edit_delete_confirm:{position_id}:{category_id}:{remover}"),
-        ikb("❌ Нет, отменить", data=f"position_edit_open:{position_id}:{category_id}:{remover}")
+        ikb("✅ Oui, supprimer", data=f"position_edit_delete_confirm:{position_id}:{category_id}:{remover}"),
+        ikb("❌ Non, annuler", data=f"position_edit_open:{position_id}:{category_id}:{remover}")
     )
 
     return keyboard.as_markup()
 
 
-# Подтверждение очистики позиции
+# Confirmation du vidage de la position
 def position_edit_clear_finl(position_id, category_id, remover) -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardBuilder()
 
     keyboard.row(
-        ikb("✅ Да, очистить", data=f"position_edit_clear_confirm:{position_id}:{category_id}:{remover}"),
-        ikb("❌ Нет, отменить", data=f"position_edit_open:{position_id}:{category_id}:{remover}")
+        ikb("✅ Oui, vider", data=f"position_edit_clear_confirm:{position_id}:{category_id}:{remover}"),
+        ikb("❌ Non, annuler", data=f"position_edit_open:{position_id}:{category_id}:{remover}")
     )
 
     return keyboard.as_markup()
 
 
-# Отмена изменения позиции и возвращение
+# Annulation de la modification de la position et retour
 def position_edit_cancel_finl(position_id, category_id, remover) -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardBuilder()
 
     keyboard.row(
-        ikb("❌ Отменить", data=f"position_edit_open:{position_id}:{category_id}:{remover}"),
+        ikb("❌ Annuler", data=f"position_edit_open:{position_id}:{category_id}:{remover}"),
     )
 
     return keyboard.as_markup()
 
 
-##################################### ТОВАРЫ ###################################
-# Отмена изменения позиции и возвращение
+##################################### PRODUITS ###################################
+# Annulation de la modification de la position et retour
 def item_add_finish_finl(position_id: Union[int, str]) -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardBuilder()
 
     keyboard.row(
-        ikb("✅ Завершить загрузку", data=f"item_add_position_finish:{position_id}"),
+        ikb("✅ Terminer le téléchargement", data=f"item_add_position_finish:{position_id}"),
     )
 
     return keyboard.as_markup()
 
 
-# Удаление товара
+# Suppression du produit
 def item_delete_finl(item_id, position_id, category_id) -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardBuilder()
 
     keyboard.row(
-        ikb("▪️ Удалить товар", data=f"item_delete_confirm:{item_id}"),
+        ikb("▪️ Supprimer le produit", data=f"item_delete_confirm:{item_id}"),
     ).row(
-        ikb("🔙 Вернуться", data=f"item_delete_swipe:{position_id}:{category_id}:0"),
+        ikb("🔙 Retour", data=f"item_delete_swipe:{position_id}:{category_id}:0"),
     )
 
     return keyboard.as_markup()
 
 
-############################### УДАЛЕНИЕ РАЗДЕЛОВ ##############################
-# Выбор раздела для удаления
+############################### SUPPRESSION DES SECTIONS ##############################
+# Choix de la section à supprimer
 def products_removes_finl() -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardBuilder()
 
     keyboard.row(
-        ikb("🗃 Удалить все категории", data=f"prod_removes_categories"),
+        ikb("🗃 Supprimer toutes les catégories", data=f"prod_removes_categories"),
     ).row(
-        ikb("📁 Удалить все позиции", data=f"prod_removes_positions"),
+        ikb("📁 Supprimer toutes les positions", data=f"prod_removes_positions"),
     ).row(
-        ikb("🎁 Удалить все товары", data=f"prod_removes_items"),
+        ikb("🎁 Supprimer tous les produits", data=f"prod_removes_items"),
     )
 
     return keyboard.as_markup()
 
 
-# Удаление всех категорий
+# Suppression de toutes les catégories
 def products_removes_categories_finl() -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardBuilder()
 
     keyboard.row(
-        ikb("✅ Да, удалить все", data="prod_removes_categories_confirm"),
-        ikb("❌ Нет, отменить", data="prod_removes_return")
+        ikb("✅ Oui, tout supprimer", data="prod_removes_categories_confirm"),
+        ikb("❌ Non, annuler", data="prod_removes_return")
     )
 
     return keyboard.as_markup()
 
 
-# Удаление всех позиций
+# Suppression de toutes les positions
 def products_removes_positions_finl() -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardBuilder()
 
     keyboard.row(
-        ikb("✅ Да, удалить все", data="prod_removes_positions_confirm"),
-        ikb("❌ Нет, отменить", data="prod_removes_return")
+        ikb("✅ Oui, tout supprimer", data="prod_removes_positions_confirm"),
+        ikb("❌ Non, annuler", data="prod_removes_return")
     )
 
     return keyboard.as_markup()
 
 
-# Удаление всех товаров
+# Suppression de tous les produits
 def products_removes_items_finl() -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardBuilder()
 
     keyboard.row(
-        ikb("✅ Да, удалить все", data="prod_removes_items_confirm"),
-        ikb("❌ Нет, отменить", data="prod_removes_return")
+        ikb("✅ Oui, tout supprimer", data="prod_removes_items_confirm"),
+        ikb("❌ Non, annuler", data="prod_removes_return")
     )
 
     return keyboard.as_markup()

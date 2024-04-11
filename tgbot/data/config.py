@@ -6,18 +6,18 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 BOT_CONFIG = configparser.ConfigParser()
 BOT_CONFIG.read("settings.ini")
 
-# Образы и конфиги
-BOT_TOKEN = BOT_CONFIG['settings']['bot_token'].strip().replace(' ', '')  # Токен бота
-BOT_TIMEZONE = "Europe/Moscow"  # Временная зона бота
-BOT_SCHEDULER = AsyncIOScheduler(timezone=BOT_TIMEZONE)  # Образ шедулера
-BOT_VERSION = 4.0  # Версия бота
+# Instances et configurations
+BOT_TOKEN = BOT_CONFIG['settings']['bot_token'].strip().replace(' ', '')  # Token du bot
+BOT_TIMEZONE = "Europe/Moscow"  # Fuseau horaire du bot
+BOT_SCHEDULER = AsyncIOScheduler(timezone=BOT_TIMEZONE)  # Instance du planificateur
+BOT_VERSION = 4.0  # Version du bot
 
-# Пути к файлам
-PATH_DATABASE = "tgbot/data/database.db"  # Путь к БД
-PATH_LOGS = "tgbot/data/logs.log"  # Путь к Логам
+# Chemins vers les fichiers
+PATH_DATABASE = "tgbot/data/database.db"  # Chemin vers la base de données
+PATH_LOGS = "tgbot/data/logs.log"  # Chemin vers les logs
 
 
-# Получение администраторов бота
+# Obtention des administrateurs du bot
 def get_admins() -> list[int]:
     read_admins = configparser.ConfigParser()
     read_admins.read("settings.ini")
@@ -42,16 +42,16 @@ def get_admins() -> list[int]:
     return admins
 
 
-# Получение описания
+# Obtention de la description
 def get_desc() -> str:
     from tgbot.utils.const_functions import ded
 
-    # УДАЛИШЬ ИЛИ ИЗМЕНИШЬ ССЫЛКИ НА ДОНАТ, КАНАЛ И ТЕМУ БОТА - КАСТРИРУЮ НАХУЙ <3
+    # SI TU SUPPRIMES OU MODIFIES LES LIENS DE DON, DE CHAÎNE OU DU SUJET DU BOT - JE TE CASTRE AMICALEMENT <3
 
     return ded(f"""
-        <b>♻️ Bot Version: <code>{BOT_VERSION}</code>
-        👑 Bot created by @djimbox
-        🍩 Donate to the author: <a href='https://yoomoney.ru/to/410012580032553'>Click me</a>
-        🤖 Bot channel [NEWS | UPDATES]: <a href='https://t.me/DJIMBO_SHOP'>Click me</a>
-        🔗 Topic Link: <a href='https://lolz.guru/threads/1888814'>Click me</a></b>
+        <b>♻️ Version du Bot : <code>{BOT_VERSION}</code>
+        👑 Bot créé par @djimbox
+        🍩 Faire un don à l'auteur : <a href='https://yoomoney.ru/to/410012580032553'>Cliquez ici</a>
+        🤖 Chaîne du Bot [NOUVELLES | MISES À JOUR] : <a href='https://t.me/DJIMBO_SHOP'>Cliquez ici</a>
+        🔗 Lien du sujet : <a href='https://lolz.guru/threads/1888814'>Cliquez ici</a></b>
     """).strip()

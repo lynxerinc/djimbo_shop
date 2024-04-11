@@ -25,17 +25,17 @@ from tgbot.utils.text_functions import category_open_admin, position_open_admin,
 router = Router(name=__name__)
 
 
-# Создание новой категории
-@router.message(F.text == "🗃 Создать категорию ➕")
+# Création d'une nouvelle catégorie
+@router.message(F.text == "🗃 Créer une catégorie ➕")
 async def prod_category_add(message: Message, bot: Bot, state: FSM, arSession: ARS):
     await state.clear()
 
     await state.set_state("here_category_name")
-    await message.answer("<b>🗃 Введите название для категории</b>")
+    await message.answer("<b>🗃 Entrez le nom pour la catégorie</b>")
 
 
-# Выбор категории для редактирования
-@router.message(F.text == "🗃 Изменить категорию 🖍")
+# Sélection d'une catégorie pour édition
+@router.message(F.text == "🗃 Modifier une catégorie 🖍")
 async def prod_category_edit(message: Message, bot: Bot, state: FSM, arSession: ARS):
     await state.clear()
 
@@ -43,15 +43,15 @@ async def prod_category_edit(message: Message, bot: Bot, state: FSM, arSession: 
 
     if len(get_categories) >= 1:
         await message.answer(
-            "<b>🗃 Выберите категорию для изменения 🖍</b>",
+            "<b>🗃 Sélectionnez une catégorie à modifier 🖍</b>",
             reply_markup=category_edit_swipe_fp(0),
         )
     else:
-        await message.answer("<b>❌ Отсутствуют категории для изменения категорий</b>")
+        await message.answer("<b>❌ Il n'y a pas de catégories à modifier</b>")
 
 
-# Создание новой позиции
-@router.message(F.text == "📁 Создать позицию ➕")
+# Création d'une nouvelle position
+@router.message(F.text == "📁 Créer une position ➕")
 async def prod_position_add(message: Message, bot: Bot, state: FSM, arSession: ARS):
     await state.clear()
 
@@ -59,15 +59,15 @@ async def prod_position_add(message: Message, bot: Bot, state: FSM, arSession: A
 
     if len(get_categories) >= 1:
         await message.answer(
-            "<b>📁 Выберите категорию для позиции ➕</b>",
+            "<b>📁 Sélectionnez une catégorie pour la position ➕</b>",
             reply_markup=position_add_swipe_fp(0),
         )
     else:
-        await message.answer("<b>❌ Отсутствуют категории для создания позиции</b>")
+        await message.answer("<b>❌ Il n'y a pas de catégories pour créer une position</b>")
 
 
-# Выбор позиции для редактирования
-@router.message(F.text == "📁 Изменить позицию 🖍")
+# Sélection d'une position pour édition
+@router.message(F.text == "📁 Modifier une position 🖍")
 async def prod_position_edit(message: Message, bot: Bot, state: FSM, arSession: ARS):
     await state.clear()
 
@@ -75,15 +75,15 @@ async def prod_position_edit(message: Message, bot: Bot, state: FSM, arSession: 
 
     if len(get_categories) >= 1:
         await message.answer(
-            "<b>📁 Выберите позицию для изменения 🖍</b>",
+            "<b>📁 Sélectionnez une position à modifier 🖍</b>",
             reply_markup=position_edit_category_swipe_fp(0),
         )
     else:
-        await message.answer("<b>❌ Отсутствуют категории для изменения позиций</b>")
+        await message.answer("<b>❌ Il n'y a pas de catégories pour modifier les positions</b>")
 
 
-# Страницы товаров для добавления
-@router.message(F.text == "🎁 Добавить товары ➕")
+# Pages de produits à ajouter
+@router.message(F.text == "🎁 Ajouter des produits ➕")
 async def prod_item_add(message: Message, bot: Bot, state: FSM, arSession: ARS):
     await state.clear()
 
@@ -91,33 +91,33 @@ async def prod_item_add(message: Message, bot: Bot, state: FSM, arSession: ARS):
 
     if len(get_categories) >= 1:
         await message.answer(
-            "<b>🎁 Выберите позицию для товаров ➕</b>",
+            "<b>🎁 Sélectionnez une position pour les produits ➕</b>",
             reply_markup=item_add_category_swipe_fp(0),
         )
     else:
-        await message.answer("<b>❌ Отсутствуют позиции для добавления товара</b>")
+        await message.answer("<b>❌ Il n'y a pas de positions pour ajouter des produits</b>")
 
 
-# Удаление категорий, позиций или товаров
-@router.message(F.text == "❌ Удаление")
+# Suppression de catégories, positions ou produits
+@router.message(F.text == "❌ Suppression")
 async def prod_removes(message: Message, bot: Bot, state: FSM, arSession: ARS):
     await state.clear()
 
     await message.answer(
-        "<b>🎁 Выберите раздел который хотите удалить ❌</b>\n",
+        "<b>🎁 Sélectionnez la section que vous souhaitez supprimer ❌</b>\n",
         reply_markup=products_removes_finl(),
     )
 
 
 ################################################################################
-############################### СОЗДАНИЕ КАТЕГОРИЙ #############################
-# Принятие названия категории для её создания
+############################### CRÉATION DE CATÉGORIES #########################
+# Acceptation du nom de la catégorie pour sa création
 @router.message(F.text, StateFilter('here_category_name'))
 async def prod_category_add_name_get(message: Message, bot: Bot, state: FSM, arSession: ARS):
     if len(message.text) > 50:
         return await message.answer(
-            "<b>❌ Название не может превышать 50 символов.</b>\n"
-            "🗃 Введите название для категории",
+            "<b>❌ Le nom ne peut dépasser 50 caractères.</b>\n"
+            "🗃 Entrez le nom pour la catégorie",
         )
 
     await state.clear()
@@ -126,22 +126,22 @@ async def prod_category_add_name_get(message: Message, bot: Bot, state: FSM, arS
     Categoryx.add(category_id, clear_html(message.text))
 
     await category_open_admin(bot, message.from_user.id, category_id, 0)
-
+    
 
 ################################################################################
-############################### ИЗМЕНЕНИЕ КАТЕГОРИИ ############################
-# Страница выбора категорий для редактирования
+############################### MODIFICATION DE CATÉGORIE ######################
+# Page de sélection des catégories à modifier
 @router.callback_query(F.data.startswith("catategory_edit_swipe:"))
 async def prod_category_edit_swipe(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     remover = int(call.data.split(":")[1])
 
     await call.message.edit_text(
-        "<b>🗃 Выберите категорию для изменения 🖍</b>",
+        "<b>🗃 Choisissez une catégorie à modifier 🖍</b>",
         reply_markup=category_edit_swipe_fp(remover),
     )
 
 
-# Выбор текущей категории для редактирования
+# Choix de la catégorie actuelle pour modification
 @router.callback_query(F.data.startswith("category_edit_open:"))
 async def prod_category_edit_open(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     category_id = call.data.split(":")[1]
@@ -153,8 +153,8 @@ async def prod_category_edit_open(call: CallbackQuery, bot: Bot, state: FSM, arS
     await category_open_admin(bot, call.from_user.id, category_id, remover)
 
 
-############################ САМО ИЗМЕНЕНИЕ КАТЕГОРИИ ##########################
-# Изменение названия категории
+############################ MODIFICATION DE LA CATÉGORIE PROPREMENT DITE #######
+# Modification du nom de la catégorie
 @router.callback_query(F.data.startswith("category_edit_name:"))
 async def prod_category_edit_name(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     category_id = call.data.split(":")[1]
@@ -167,12 +167,12 @@ async def prod_category_edit_name(call: CallbackQuery, bot: Bot, state: FSM, arS
     await del_message(call.message)
 
     await call.message.answer(
-        "<b>🗃 Введите новое название для категории</b>",
+        "<b>🗃 Entrez le nouveau nom pour la catégorie</b>",
         reply_markup=category_edit_cancel_finl(category_id, remover),
     )
 
 
-# Принятие нового названия для категории
+# Acceptation du nouveau nom pour la catégorie
 @router.message(F.text, StateFilter('here_category_edit_name'))
 async def prod_category_edit_name_get(message: Message, bot: Bot, state: FSM, arSession: ARS):
     category_id = (await state.get_data())['here_category_id']
@@ -180,8 +180,8 @@ async def prod_category_edit_name_get(message: Message, bot: Bot, state: FSM, ar
 
     if len(message.text) > 50:
         return await message.answer(
-            "<b>❌ Название не может превышать 50 символов.</b>\n"
-            "🗃 Введите новое название для категории",
+            "<b>❌ Le nom ne peut dépasser 50 caractères.</b>\n"
+            "🗃 Entrez le nouveau nom pour la catégorie",
             reply_markup=category_edit_cancel_finl(category_id, remover),
         )
 
@@ -191,19 +191,19 @@ async def prod_category_edit_name_get(message: Message, bot: Bot, state: FSM, ar
     await category_open_admin(bot, message.from_user.id, category_id, remover)
 
 
-# Окно с уточнением удалить категорию
+# Fenêtre de confirmation pour supprimer la catégorie
 @router.callback_query(F.data.startswith("category_edit_delete:"))
 async def prod_category_edit_delete(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     category_id = call.data.split(":")[1]
     remover = int(call.data.split(":")[2])
 
     await call.message.edit_text(
-        "<b>❗ Вы действительно хотите удалить категорию и все её данные?</b>",
+        "<b>❗ Voulez-vous vraiment supprimer cette catégorie et toutes ses données ?</b>",
         reply_markup=category_edit_delete_finl(category_id, remover),
     )
 
 
-# Отмена удаления категории
+# Confirmation de la suppression de la catégorie
 @router.callback_query(F.data.startswith("category_edit_delete_confirm:"))
 async def prod_category_edit_delete_confirm(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     category_id = call.data.split(":")[1]
@@ -213,13 +213,13 @@ async def prod_category_edit_delete_confirm(call: CallbackQuery, bot: Bot, state
     Positionx.delete(category_id=category_id)
     Itemx.delete(category_id=category_id)
 
-    await call.answer("🗃 Категория и все её данные были успешно удалены ✅")
+    await call.answer("🗃 La catégorie et toutes ses données ont été supprimées avec succès ✅")
 
     get_categories = Categoryx.get_all()
 
     if len(get_categories) >= 1:
         await call.message.edit_text(
-            "<b>🗃 Выберите категорию для изменения 🖍</b>",
+            "<b>🗃 Choisissez une catégorie à modifier 🖍</b>",
             reply_markup=category_edit_swipe_fp(remover),
         )
     else:
@@ -227,19 +227,19 @@ async def prod_category_edit_delete_confirm(call: CallbackQuery, bot: Bot, state
 
 
 ################################################################################
-############################### ДОБАВЛЕНИЕ ПОЗИЦИИ #############################
-# Следующая страница выбора категорий для расположения позиции
+############################### AJOUT DE POSITION ##############################
+# Page suivante pour choisir la catégorie où placer la position
 @router.callback_query(F.data.startswith("position_add_swipe:"))
 async def prod_position_add_swipe(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     remover = int(call.data.split(":")[1])
 
     await call.message.edit_text(
-        "<b>📁 Выберите категорию для позиции ➕</b>",
+        "<b>📁 Choisissez une catégorie pour la position ➕</b>",
         reply_markup=position_add_swipe_fp(remover),
     )
 
 
-# Выбор категории для создания позиции
+# Sélection d'une catégorie pour créer une position
 @router.callback_query(F.data.startswith("position_add_open:"))
 async def prod_position_add_open(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     category_id = call.data.split(":")[1]
@@ -247,58 +247,58 @@ async def prod_position_add_open(call: CallbackQuery, bot: Bot, state: FSM, arSe
     await state.update_data(here_category_id=category_id)
     await state.set_state("here_position_name")
 
-    await call.message.edit_text("<b>📁 Введите название для позиции</b>")
+    await call.message.edit_text("<b>📁 Entrez le nom pour la position</b>")
 
 
-# Принятие названия для создания позиции
+# Acceptation du nom pour la création de la position
 @router.message(F.text, StateFilter('here_position_name'))
 async def prod_position_add_name_get(message: Message, bot: Bot, state: FSM, arSession: ARS):
     if len(message.text) > 50:
         return await message.answer(
-            "<b>❌ Название не может превышать 50 символов.</b>\n"
-            "📁 Введите название для позиции",
+            "<b>❌ Le nom ne peut dépasser 50 caractères.</b>\n"
+            "📁 Entrez le nom pour la position",
         )
 
     await state.update_data(here_position_name=clear_html(message.text))
     await state.set_state("here_position_price")
 
-    await message.answer("<b>📁 Введите цену для позиции</b>")
+    await message.answer("<b>📁 Entrez le prix pour la position</b>")
 
 
-# Принятие цены позиции для её создания
+# Acceptation du prix pour la création de la position
 @router.message(F.text, StateFilter('here_position_price'))
 async def prod_position_add_price_get(message: Message, bot: Bot, state: FSM, arSession: ARS):
     if not is_number(message.text):
         return await message.answer(
-            "<b>❌ Данные были введены неверно.</b>\n"
-            "📁 Введите цену для позиции",
+            "<b>❌ Les données ont été saisies incorrectement.</b>\n"
+            "📁 Entrez le prix pour la position",
         )
 
     if to_number(message.text) > 10_000_000 or to_number(message.text) < 0:
         return await message.answer(
-            "<b>❌ Цена не может быть меньше 0₽ или больше 10 000 000₽.</b>\n"
-            "📁 Введите цену для позиции",
+            "<b>❌ Le prix ne peut être inférieur à 0 ou supérieur à 10 000 000₽.</b>\n"
+            "📁 Entrez le prix pour la position",
         )
 
     await state.update_data(here_position_price=to_number(message.text))
     await state.set_state("here_position_desc")
 
     await message.answer(
-        "<b>📁 Введите описание для позиции</b>\n"
-        "❕ Вы можете использовать HTML разметку\n"
-        "❕ Отправьте <code>0</code> чтобы пропустить.",
+        "<b>📁 Entrez la description pour la position</b>\n"
+        "❕ Vous pouvez utiliser le balisage HTML\n"
+        "❕ Envoyez <code>0</code> pour passer.",
     )
 
 
-# Принятие описания позиции для её создания
+# Acceptation de la description pour la création de la position
 @router.message(F.text, StateFilter('here_position_desc'))
 async def prod_position_add_desc_get(message: Message, bot: Bot, state: FSM, arSession: ARS):
     if len(message.text) > 400:
         await message.answer(
-            "<b>❌ Описание не может превышать 400 символов.</b>\n"
-            "📁 Введите новое описание для позиции\n"
-            "❕ Вы можете использовать HTML разметку\n"
-            "❕ Отправьте <code>0</code> чтобы пропустить.",
+            "<b>❌ La description ne peut dépasser 400 caractères.</b>\n"
+            "📁 Entrez une nouvelle description pour la position\n"
+            "❕ Vous pouvez utiliser le balisage HTML\n"
+            "❕ Envoyez <code>0</code> pour passer.",
         )
 
     try:
@@ -310,22 +310,22 @@ async def prod_position_add_desc_get(message: Message, bot: Bot, state: FSM, arS
             position_desc = "None"
     except:
         return await message.answer(
-            "<b>❌ Ошибка синтаксиса HTML.</b>\n"
-            "📁 Введите описание для позиции\n"
-            "❕ Вы можете использовать HTML разметку\n"
-            "❕ Отправьте <code>0</code> чтобы пропустить.",
+            "<b>❌ Erreur de syntaxe HTML.</b>\n"
+            "📁 Entrez la description pour la position\n"
+            "❕ Vous pouvez utiliser le balisage HTML\n"
+            "❕ Envoyez <code>0</code> pour passer.",
         )
 
     await state.update_data(here_position_desc=position_desc)
     await state.set_state("here_position_photo")
 
     await message.answer(
-        "<b>📁 Отправьте изображение для позиции</b>\n"
-        "❕ Отправьте <code>0</code> чтобы пропустить.",
+        "<b>📁 Envoyez une image pour la position</b>\n"
+        "❕ Envoyez <code>0</code> pour passer.",
     )
 
 
-# Принятие изображения позиции для её создания
+# Acceptation de l'image pour la création de la position
 @router.message((F.text == "0") | F.photo, StateFilter('here_position_photo'))
 async def prod_position_add_photo_get(message: Message, bot: Bot, state: FSM, arSession: ARS):
     state_data = await state.get_data()
@@ -358,19 +358,19 @@ async def prod_position_add_photo_get(message: Message, bot: Bot, state: FSM, ar
 
 
 ################################################################################
-############################### ИЗМЕНЕНИЕ ПОЗИЦИИ ##############################
-# Перемещение по страницам категорий для редактирования позиции
+############################### MODIFICATION DE POSITION ########################
+# Défilement des pages de catégories pour la modification d'une position
 @router.callback_query(F.data.startswith("position_edit_category_swipe:"))
 async def prod_position_edit_category_swipe(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     remover = int(call.data.split(":")[1])
 
     await call.message.edit_text(
-        "<b>📁 Выберите позицию для изменения 🖍</b>",
+        "<b>📁 Choisissez la position à modifier 🖍</b>",
         reply_markup=position_edit_category_swipe_fp(remover),
     )
 
 
-# Выбор категории с нужной позицией
+# Sélection d'une catégorie contenant la position à modifier
 @router.callback_query(F.data.startswith("position_edit_category_open:"))
 async def prod_position_edit_category_open(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     category_id = call.data.split(":")[1]
@@ -380,14 +380,14 @@ async def prod_position_edit_category_open(call: CallbackQuery, bot: Bot, state:
 
     if len(get_positions) >= 1:
         await call.message.edit_text(
-            "<b>📁 Выберите позицию для изменения 🖍</b>",
+            "<b>📁 Choisissez la position à modifier 🖍</b>",
             reply_markup=position_edit_swipe_fp(0, category_id),
         )
     else:
-        await call.answer(f"📁 Позиции в категории {get_category.category_name} отсутствуют")
+        await call.answer(f"📁 Aucune position dans la catégorie {get_category.category_name}")
 
 
-# Перемещение по страницам позиций для редактирования позиции
+# Défilement des pages de positions pour la modification
 @router.callback_query(F.data.startswith("position_edit_swipe:"))
 async def prod_position_edit_swipe(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     category_id = call.data.split(":")[1]
@@ -396,12 +396,12 @@ async def prod_position_edit_swipe(call: CallbackQuery, bot: Bot, state: FSM, ar
     await del_message(call.message)
 
     await call.message.answer(
-        "<b>📁 Выберите позицию для изменения 🖍</b>",
+        "<b>📁 Choisissez la position à modifier 🖍</b>",
         reply_markup=position_edit_swipe_fp(remover, category_id),
     )
 
 
-# Выбор позиции для редактирования
+# Sélection de la position pour la modifier
 @router.callback_query(F.data.startswith("position_edit_open:"))
 async def prod_position_edit_open(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     position_id = call.data.split(":")[1]
@@ -414,8 +414,8 @@ async def prod_position_edit_open(call: CallbackQuery, bot: Bot, state: FSM, arS
     await position_open_admin(bot, call.from_user.id, position_id)
 
 
-############################ САМО ИЗМЕНЕНИЕ ПОЗИЦИИ ############################
-# Изменение названия позиции
+############################ MODIFICATION PROPRE DE LA POSITION ################
+# Modification du nom de la position
 @router.callback_query(F.data.startswith("position_edit_name:"))
 async def prod_position_edit_name(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     position_id = call.data.split(":")[1]
@@ -430,12 +430,12 @@ async def prod_position_edit_name(call: CallbackQuery, bot: Bot, state: FSM, arS
     await del_message(call.message)
 
     await call.message.answer(
-        "<b>📁 Введите новое название для позиции</b>",
+        "<b>📁 Entrez le nouveau nom pour la position</b>",
         reply_markup=position_edit_cancel_finl(position_id, category_id, remover),
     )
 
 
-# Принятие названия позиции для её изменения
+# Acceptation du nouveau nom pour la position
 @router.message(F.text, StateFilter('here_position_edit_name'))
 async def prod_position_edit_name_get(message: Message, bot: Bot, state: FSM, arSession: ARS):
     state_data = await state.get_data()
@@ -446,8 +446,8 @@ async def prod_position_edit_name_get(message: Message, bot: Bot, state: FSM, ar
 
     if len(message.text) > 50:
         return await message.answer(
-            "<b>❌ Название не может превышать 50 символов.</b>\n"
-            "📁 Введите новое название для позиции",
+            "<b>❌ Le nom ne peut dépasser 50 caractères.</b>\n"
+            "📁 Entrez le nouveau nom pour la position",
             reply_markup=position_edit_cancel_finl(position_id, category_id, remover),
         )
 
@@ -457,7 +457,7 @@ async def prod_position_edit_name_get(message: Message, bot: Bot, state: FSM, ar
     await position_open_admin(bot, message.from_user.id, position_id)
 
 
-# Изменение цены позиции
+# Modification du prix de la position
 @router.callback_query(F.data.startswith("position_edit_price:"))
 async def prod_position_edit_price(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     position_id = call.data.split(":")[1]
@@ -472,12 +472,12 @@ async def prod_position_edit_price(call: CallbackQuery, bot: Bot, state: FSM, ar
     await del_message(call.message)
 
     await call.message.answer(
-        "<b>📁 Введите новую цену для позиции</b>",
+        "<b>📁 Entrez le nouveau prix pour la position</b>",
         reply_markup=position_edit_cancel_finl(position_id, category_id, remover),
     )
 
 
-# Принятие цены позиции для её изменения
+# Acceptation du nouveau prix pour la position
 @router.message(F.text, StateFilter('here_position_edit_price'))
 async def prod_position_edit_price_get(message: Message, bot: Bot, state: FSM, arSession: ARS):
     state_data = await state.get_data()
@@ -488,15 +488,15 @@ async def prod_position_edit_price_get(message: Message, bot: Bot, state: FSM, a
 
     if not is_number(message.text):
         await message.answer(
-            "<b>❌ Данные были введены неверно.</b>\n"
-            "📁 Введите цену для позиции",
+            "<b>❌ Les données ont été saisies incorrectement.</b>\n"
+            "📁 Entrez le prix pour la position",
             reply_markup=position_edit_cancel_finl(position_id, category_id, remover),
         )
 
     if to_number(message.text) > 10_000_000 or to_number(message.text) < 0:
         await message.answer(
-            "<b>❌ Цена не может быть меньше 0₽ или больше 10 000 000₽.</b>\n"
-            "📁 Введите цену для позиции",
+            "<b>❌ Le prix ne peut être inférieur à 0 ou supérieur à 10 000 000₽.</b>\n"
+            "📁 Entrez le prix pour la position",
             reply_markup=position_edit_cancel_finl(position_id, category_id, remover),
         )
 
@@ -506,7 +506,7 @@ async def prod_position_edit_price_get(message: Message, bot: Bot, state: FSM, a
     await position_open_admin(bot, message.from_user.id, position_id)
 
 
-# Изменение описания позиции
+# Modification de la description de la position
 @router.callback_query(F.data.startswith("position_edit_desc:"))
 async def prod_position_edit_desc(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     position_id = call.data.split(":")[1]
@@ -521,28 +521,28 @@ async def prod_position_edit_desc(call: CallbackQuery, bot: Bot, state: FSM, arS
     await del_message(call.message)
 
     await call.message.answer(
-        "<b>📁 Введите новое описание для позиции</b>\n"
-        "❕ Вы можете использовать HTML разметку\n"
-        "❕ Отправьте <code>0</code> чтобы пропустить.",
+        "<b>📁 Entrez la nouvelle description pour la position</b>\n"
+        "❕ Vous pouvez utiliser la syntaxe HTML\n"
+        "❕ Envoyez <code>0</code> pour passer.",
         reply_markup=position_edit_cancel_finl(position_id, category_id, remover),
     )
 
 
-# Принятие описания позиции для её изменения
+# Acceptation de la nouvelle description pour la position
 @router.message(F.text, StateFilter('here_position_edit_desc'))
 async def prod_position_edit_desc_get(message: Message, bot: Bot, state: FSM, arSession: ARS):
     state_data = await state.get_data()
 
-    category_id = state_data['here_category_id']
     position_id = state_data['here_position_id']
+    category_id = state_data['here_category_id']
     remover = state_data['here_remover']
 
     if len(message.text) > 400:
         return await message.answer(
-            "<b>❌ Описание не может превышать 400 символов.</b>\n"
-            "📁 Введите новое описание для позиции\n"
-            "❕ Вы можете использовать HTML разметку\n"
-            "❕ Отправьте <code>0</code> чтобы пропустить.",
+            "<b>❌ La description ne peut dépasser 400 caractères.</b>\n"
+            "📁 Entrez la nouvelle description pour la position\n"
+            "❕ Vous pouvez utiliser la syntaxe HTML\n"
+            "❕ Envoyez <code>0</code> pour passer.",
             reply_markup=position_edit_cancel_finl(position_id, category_id, remover),
         )
 
@@ -555,10 +555,10 @@ async def prod_position_edit_desc_get(message: Message, bot: Bot, state: FSM, ar
             position_desc = "None"
     except:
         return await message.answer(
-            "<b>❌ Ошибка синтаксиса HTML.</b>\n"
-            "📁 Введите новое описание для позиции\n"
-            "❕ Вы можете использовать HTML разметку\n"
-            "❕ Отправьте <code>0</code> чтобы пропустить.",
+            "<b>❌ Erreur de syntaxe HTML.</b>\n"
+            "📁 Entrez la nouvelle description pour la position\n"
+            "❕ Vous pouvez utiliser la syntaxe HTML\n"
+            "❕ Envoyez <code>0</code> pour passer.",
             reply_markup=position_edit_cancel_finl(position_id, category_id, remover),
         )
 
@@ -568,7 +568,7 @@ async def prod_position_edit_desc_get(message: Message, bot: Bot, state: FSM, ar
     await position_open_admin(bot, message.from_user.id, position_id)
 
 
-# Изменение изображения позиции
+# Modification de l'image de la position
 @router.callback_query(F.data.startswith("position_edit_photo:"))
 async def prod_position_edit_photo(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     position_id = call.data.split(":")[1]
@@ -583,13 +583,13 @@ async def prod_position_edit_photo(call: CallbackQuery, bot: Bot, state: FSM, ar
     await del_message(call.message)
 
     await call.message.answer(
-        "<b>📁 Отправьте новое изображение для позиции</b>\n"
-        "❕ Отправьте <code>0</code> чтобы пропустить.",
+        "<b>📁 Envoyez la nouvelle image pour la position</b>\n"
+        "❕ Envoyez <code>0</code> pour ignorer.",
         reply_markup=position_edit_cancel_finl(position_id, category_id, remover),
     )
 
 
-# Принятие нового фото для позиции
+# Acceptation de la nouvelle image pour la position
 @router.message((F.text == "0") | F.photo, StateFilter('here_position_edit_photo'))
 async def prod_position_edit_photo_get(message: Message, bot: Bot, state: FSM, arSession: ARS):
     state_data = await state.get_data()
@@ -611,7 +611,7 @@ async def prod_position_edit_photo_get(message: Message, bot: Bot, state: FSM, a
     await position_open_admin(bot, message.from_user.id, position_id)
 
 
-# Выгрузка товаров
+# Exportation des produits
 @router.callback_query(F.data.startswith("position_edit_items:"))
 async def prod_position_edit_items(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     position_id = call.data.split(":")[1]
@@ -626,16 +626,16 @@ async def prod_position_edit_items(call: CallbackQuery, bot: Bot, state: FSM, ar
         save_items = await upload_text(arSession, save_items)
 
         await call.message.answer(
-            f"<b>📥 Все товары позиции: <code>{get_position.position_name}</code>\n"
-            f"🔗 Ссылка: <a href='{save_items}'>кликабельно</a></b>",
+            f"<b>📥 Tous les produits de la position: <code>{get_position.position_name}</code>\n"
+            f"🔗 Lien: <a href='{save_items}'>cliquable</a></b>",
             reply_markup=close_finl(),
         )
         await call.answer(cache_time=5)
     else:
-        await call.answer("❕ В данной позиции отсутствуют товары", True)
+        await call.answer("❕ Aucun produit dans cette position", True)
 
 
-# Удаление позиции
+# Suppression de la position
 @router.callback_query(F.data.startswith("position_edit_delete:"))
 async def prod_position_edit_delete(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     position_id = call.data.split(":")[1]
@@ -645,12 +645,12 @@ async def prod_position_edit_delete(call: CallbackQuery, bot: Bot, state: FSM, a
     await del_message(call.message)
 
     await call.message.answer(
-        "<b>📁 Вы действительно хотите удалить позицию? ❌</b>",
+        "<b>📁 Voulez-vous vraiment supprimer cette position ? ❌</b>",
         reply_markup=position_edit_delete_finl(position_id, category_id, remover),
     )
 
 
-# Подтверждение удаления позиции
+# Confirmation de la suppression de la position
 @router.callback_query(F.data.startswith("position_edit_delete_confirm:"))
 async def prod_position_edit_delete_confirm(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     position_id = call.data.split(":")[1]
@@ -660,18 +660,18 @@ async def prod_position_edit_delete_confirm(call: CallbackQuery, bot: Bot, state
     Itemx.delete(position_id=position_id)
     Positionx.delete(position_id=position_id)
 
-    await call.answer("📁 Вы успешно удалили позицию и её товары ✅")
+    await call.answer("📁 La position et ses produits ont été supprimés avec succès ✅")
 
     if len(Positionx.gets(category_id=category_id)) >= 1:
         await call.message.edit_text(
-            "<b>📁 Выберите позицию для изменения 🖍</b>",
+            "<b>📁 Choisissez une position à modifier 🖍</b>",
             reply_markup=position_edit_swipe_fp(remover, category_id),
         )
     else:
         await del_message(call.message)
 
 
-# Очистка позиции
+# Nettoyage de la position
 @router.callback_query(F.data.startswith("position_edit_clear:"))
 async def prod_position_edit_clear(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     position_id = call.data.split(":")[1]
@@ -681,12 +681,12 @@ async def prod_position_edit_clear(call: CallbackQuery, bot: Bot, state: FSM, ar
     await del_message(call.message)
 
     await call.message.answer(
-        "<b>📁 Вы хотите удалить все товары позиции?</b>",
+        "<b>📁 Souhaitez-vous supprimer tous les produits de cette position ?</b>",
         reply_markup=position_edit_clear_finl(position_id, category_id, remover),
     )
 
 
-# Согласие очистики позиции
+# Accord pour le nettoyage de la position
 @router.callback_query(F.data.startswith("position_edit_clear_confirm:"))
 async def prod_position_edit_clear_confirm(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     position_id = call.data.split(":")[1]
@@ -694,27 +694,27 @@ async def prod_position_edit_clear_confirm(call: CallbackQuery, bot: Bot, state:
     remover = int(call.data.split(":")[3])
 
     Itemx.delete(position_id=position_id)
-    await call.answer("📁 Вы успешно удалили все товары в позиции ✅")
+    await call.answer("📁 Tous les produits de la position ont été supprimés avec succès ✅")
 
     await del_message(call.message)
     await position_open_admin(bot, call.from_user.id, position_id)
 
 
 ################################################################################
-############################### ДОБАВЛЕНИЕ ТОВАРОВ #############################
-# Перемещение по страницам категорий для добавления товаров
+############################### AJOUT DE PRODUITS ##############################
+# Navigation entre les pages de catégories pour l'ajout de produits
 @router.callback_query(F.data.startswith("item_add_category_swipe:"))
 async def prod_item_add_category_swipe(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     category_id = call.data.split(":")[1]
     remover = int(call.data.split(":")[1])
 
     await call.message.edit_text(
-        "<b>🎁 Выберите позицию для товаров ➕</b>",
+        "<b>🎁 Choisissez une position pour les produits ➕</b>",
         reply_markup=item_add_category_swipe_fp(remover),
     )
 
 
-# Выбор категории с нужной позицией
+# Sélection d'une catégorie contenant la position souhaitée
 @router.callback_query(F.data.startswith("item_add_category_open:"))
 async def prod_item_add_category_open(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     category_id = call.data.split(":")[1]
@@ -727,26 +727,26 @@ async def prod_item_add_category_open(call: CallbackQuery, bot: Bot, state: FSM,
 
     if len(get_positions) >= 1:
         await call.message.answer(
-            "<b>🎁 Выберите позицию для товаров ➕</b>",
+            "<b>🎁 Choisissez une position pour les produits ➕</b>",
             reply_markup=item_add_position_swipe_fp(0, category_id),
         )
     else:
-        await call.answer(f"🎁 Позиции в категории {get_category.category_name} отсутствуют")
+        await call.answer(f"🎁 Aucune position dans la catégorie {get_category.category_name}")
 
 
-# Перемещение по страницам позиций для добавления товаров
+# Navigation entre les pages de positions pour l'ajout de produits
 @router.callback_query(F.data.startswith("item_add_position_swipe:"))
 async def prod_item_add_position_swipe(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     category_id = call.data.split(":")[1]
     remover = int(call.data.split(":")[2])
 
     await call.message.edit_text(
-        "<b>🎁 Выберите позицию для товаров ➕</b>",
+        "<b>🎁 Choisissez une position pour les produits ➕</b>",
         reply_markup=item_add_position_swipe_fp(remover, category_id),
     )
 
 
-# Выбор позиции для добавления товаров
+# Sélection d'une position pour l'ajout de produits
 @router.callback_query(F.data.startswith("item_add_position_open:"), flags={'rate': 0})
 async def prod_item_add_position_open(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     position_id = call.data.split(":")[1]
@@ -761,19 +761,19 @@ async def prod_item_add_position_open(call: CallbackQuery, bot: Bot, state: FSM,
 
     await call.message.answer(
         ded(f"""
-            <b>📤 Отправьте данные товаров.</b>
-            ❗ Товары разделяются одной пустой строчкой. Пример:
-            <code>Данные товара...
+            <b>📤 Envoyez les données des produits.</b>
+            ❗ Les produits doivent être séparés par une ligne vide. Exemple:
+            <code>Données du produit...
 
-            Данные товара...
+            Données du produit...
 
-            Данные товара...</code>
+            Données du produit...</code>
         """),
         reply_markup=item_add_finish_finl(position_id),
     )
 
 
-# Завершение загрузки товаров
+# Fin de l'ajout des produits
 @router.callback_query(F.data.startswith('item_add_position_finish:'), flags={'rate': 0})
 async def prod_item_add_finish(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     position_id = call.data.split(":")[1]
@@ -787,17 +787,17 @@ async def prod_item_add_finish(call: CallbackQuery, bot: Bot, state: FSM, arSess
 
     await call.message.edit_reply_markup()
     await call.message.answer(
-        "<b>📥 Загрузка товаров была успешно завершена ✅\n"
-        f"🎁 Загружено товаров: <code>{count_items}шт</code></b>",
+        "<b>📥 L'ajout des produits a été complété avec succès ✅\n"
+        f"🎁 Nombre de produits ajoutés: <code>{count_items}</code></b>",
     )
 
     await position_open_admin(bot, call.from_user.id, position_id)
 
 
-# Принятие данных товара
+# Réception des données des produits
 @router.message(F.text, StateFilter('here_add_items'), flags={'rate': 0})
 async def prod_item_add_get(message: Message, bot: Bot, state: FSM, arSession: ARS):
-    cache_message = await message.answer("<b>⌛ Ждите, товары добавляются...</b>")
+    cache_message = await message.answer("<b>⌛ Veuillez patienter, ajout des produits en cours...</b>")
 
     count_add = 0
     get_items = clear_list(message.text.split("\n\n"))
@@ -821,14 +821,15 @@ async def prod_item_add_get(message: Message, bot: Bot, state: FSM, arSession: A
     )
 
     await cache_message.edit_text(
-        f"<b>📥 Товары в кол-ве <u>{count_add}шт</u> были успешно добавлены ✅</b>",
+        f"<b>📥 <u>{count_add} produits</u> ont été ajoutés avec succès ✅</b>",
         reply_markup=item_add_finish_finl(position_id),
     )
 
 
+
 ################################################################################
-############################### УДАЛЕНИЕ ТОВАРОВ ###############################
-# Страницы удаления товаров
+############################### SUPPRESSION DES PRODUITS #######################
+# Pages pour la suppression des produits
 @router.callback_query(F.data.startswith("item_delete_swipe:"))
 async def prod_item_delete_swipe(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     position_id = call.data.split(":")[1]
@@ -842,14 +843,14 @@ async def prod_item_delete_swipe(call: CallbackQuery, bot: Bot, state: FSM, arSe
 
     if len(get_items) >= 1:
         await call.message.answer(
-            "<b>🎁 Выберите товар для удаления</b>",
+            "<b>🎁 Choisissez un produit à supprimer</b>",
             reply_markup=item_delete_swipe_fp(remover, position_id, category_id),
         )
     else:
-        await call.answer(f"🎁 Товары в позиции {get_position.position_name} отсутствуют")
+        await call.answer(f"🎁 Aucun produit dans la position {get_position.position_name}")
 
 
-# Удаление товара
+# Suppression d'un produit
 @router.callback_query(F.data.startswith("item_delete_open:"))
 async def prod_item_delete_open(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     item_id = call.data.split(":")[1]
@@ -858,7 +859,7 @@ async def prod_item_delete_open(call: CallbackQuery, bot: Bot, state: FSM, arSes
     await item_open_admin(bot, call.from_user.id, item_id, 0)
 
 
-# Подтверждение удаления товара
+# Confirmation de la suppression d'un produit
 @router.callback_query(F.data.startswith("item_delete_confirm:"))
 async def prod_item_delete_confirm_open(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     item_id = call.data.split(":")[1]
@@ -869,32 +870,32 @@ async def prod_item_delete_confirm_open(call: CallbackQuery, bot: Bot, state: FS
     Itemx.delete(item_id=item_id)
 
     await call.message.edit_text(
-        f"<b>✅ Товар был успешно удалён</b>\n"
+        f"<b>✅ Le produit a été supprimé avec succès</b>\n"
         f"➖➖➖➖➖➖➖➖➖➖\n"
-        f"🎁️ Товар: <code>{get_item.item_data}</code>"
+        f"🎁 Produit: <code>{get_item.item_data}</code>"
     )
 
     if len(get_items) >= 1:
         await call.message.answer(
-            "<b>🎁 Выберите товар для удаления</b>",
+            "<b>🎁 Choisissez un produit à supprimer</b>",
             reply_markup=item_delete_swipe_fp(0, get_item.position_id, get_item.category_id),
         )
 
 
 ################################################################################
-############################### УДАЛЕНИЕ РАЗДЕЛОВ ##############################
-# Возвращение к меню удаления разделов
+############################### SUPPRESSION DES SECTIONS #######################
+# Retour au menu de suppression des sections
 @router.callback_query(F.data == "prod_removes_return")
 async def prod_removes_return(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     await state.clear()
 
     await call.message.edit_text(
-        "<b>🎁 Выберите раздел который хотите удалить ❌</b>\n",
+        "<b>🎁 Choisissez la section que vous souhaitez supprimer ❌</b>\n",
         reply_markup=products_removes_finl(),
     )
 
 
-# Удаление всех категорий
+# Suppression de toutes les catégories
 @router.callback_query(F.data == "prod_removes_categories")
 async def prod_removes_categories(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     get_categories = len(Categoryx.get_all())
@@ -902,15 +903,15 @@ async def prod_removes_categories(call: CallbackQuery, bot: Bot, state: FSM, arS
     get_items = len(Itemx.get_all())
 
     await call.message.edit_text(
-        f"<b>❌ Вы действительно хотите удалить все категории, позиции и товары?</b>\n"
-        f"🗃 Категорий: <code>{get_categories}шт</code>\n"
-        f"📁 Позиций: <code>{get_positions}шт</code>\n"
-        f"🎁 Товаров: <code>{get_items}шт</code>",
+        f"<b>❌ Voulez-vous vraiment supprimer toutes les catégories, positions et produits ?</b>\n"
+        f"🗃 Catégories: <code>{get_categories}</code>\n"
+        f"📁 Positions: <code>{get_positions}</code>\n"
+        f"🎁 Produits: <code>{get_items}</code>",
         reply_markup=products_removes_categories_finl(),
     )
 
 
-# Подтверждение удаления всех категорий (позиций и товаров включительно)
+# Confirmation de la suppression de toutes les catégories (incluant positions et produits)
 @router.callback_query(F.data == "prod_removes_categories_confirm")
 async def prod_removes_categories_confirm(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     get_categories = len(Categoryx.get_all())
@@ -922,28 +923,28 @@ async def prod_removes_categories_confirm(call: CallbackQuery, bot: Bot, state: 
     Itemx.clear()
 
     await call.message.edit_text(
-        f"<b>✅ Вы успешно удалили все категории</b>\n"
-        f"🗃 Категорий: <code>{get_categories}шт</code>\n"
-        f"📁 Позиций: <code>{get_positions}шт</code>\n"
-        f"🎁 Товаров: <code>{get_items}шт</code>"
+        f"<b>✅ Vous avez réussi à supprimer toutes les catégories</b>\n"
+        f"🗃 Catégories: <code>{get_categories}</code>\n"
+        f"📁 Positions: <code>{get_positions}</code>\n"
+        f"🎁 Produits: <code>{get_items}</code>"
     )
 
 
-# Удаление всех позиций
+# Suppression de toutes les positions
 @router.callback_query(F.data == "prod_removes_positions")
 async def prod_removes_positions(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     get_positions = len(Positionx.get_all())
     get_items = len(Itemx.get_all())
 
     await call.message.edit_text(
-        f"<b>❌ Вы действительно хотите удалить все позиции и товары?</b>\n"
-        f"📁 Позиций: <code>{get_positions}шт</code>\n"
-        f"🎁 Товаров: <code>{get_items}шт</code>",
+        f"<b>❌ Voulez-vous vraiment supprimer toutes les positions et les produits associés ?</b>\n"
+        f"📁 Positions: <code>{get_positions}</code>\n"
+        f"🎁 Produits: <code>{get_items}</code>",
         reply_markup=products_removes_positions_finl(),
     )
 
 
-# Подтверждение удаления всех позиций (товаров включительно)
+# Confirmation de la suppression de toutes les positions (et produits associés)
 @router.callback_query(F.data == "prod_removes_positions_confirm")
 async def prod_position_remove(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     get_positions = len(Positionx.get_all())
@@ -953,25 +954,25 @@ async def prod_position_remove(call: CallbackQuery, bot: Bot, state: FSM, arSess
     Itemx.clear()
 
     await call.message.edit_text(
-        f"<b>✅ Вы успешно удалили все позиции</b>\n"
-        f"📁 Позиций: <code>{get_positions}шт</code>\n"
-        f"🎁 Товаров: <code>{get_items}шт</code>"
+        f"<b>✅ Vous avez réussi à supprimer toutes les positions</b>\n"
+        f"📁 Positions: <code>{get_positions}</code>\n"
+        f"🎁 Produits: <code>{get_items}</code>"
     )
 
 
-# Удаление всех товаров
+# Suppression de tous les produits
 @router.callback_query(F.data == "prod_removes_items")
 async def prod_removes_items(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     get_items = len(Itemx.get_all())
 
     await call.message.edit_text(
-        f"<b>❌ Вы действительно хотите удалить все товары?</b>\n"
-        f"🎁 Товаров: <code>{get_items}шт</code>",
+        f"<b>❌ Voulez-vous vraiment supprimer tous les produits ?</b>\n"
+        f"🎁 Produits: <code>{get_items}</code>",
         reply_markup=products_removes_items_finl(),
     )
 
 
-# Согласие на удаление всех товаров
+# Accord pour la suppression de tous les produits
 @router.callback_query(F.data == "prod_removes_items_confirm")
 async def prod_item_remove(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     get_items = len(Itemx.get_all())
@@ -979,6 +980,6 @@ async def prod_item_remove(call: CallbackQuery, bot: Bot, state: FSM, arSession:
     Itemx.clear()
 
     await call.message.edit_text(
-        f"<b>✅ Вы успешно удалили все товары</b>\n"
-        f"🎁 Товаров: <code>{get_items}шт</code>"
+        f"<b>✅ Vous avez réussi à supprimer tous les produits</b>\n"
+        f"🎁 Produits: <code>{get_items}</code>"
     )

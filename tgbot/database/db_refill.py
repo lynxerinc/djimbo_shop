@@ -8,8 +8,7 @@ from tgbot.data.config import PATH_DATABASE
 from tgbot.database.db_helper import dict_factory, update_format_where, update_format
 from tgbot.utils.const_functions import get_unix, ded
 
-
-# Модель таблицы
+# Modèle de la table
 class RefillModel(BaseModel):
     increment: int
     user_id: int
@@ -19,12 +18,11 @@ class RefillModel(BaseModel):
     refill_method: str
     refill_unix: int
 
-
-# Работа с пополнениями
+# Gestion des recharges
 class Refillx:
     storage_name = "storage_refill"
 
-    # Добавление записи
+    # Ajout d'un enregistrement
     @staticmethod
     def add(
             user_id: int,
@@ -59,7 +57,7 @@ class Refillx:
                 ],
             )
 
-    # Получение записи
+    # Récupération d'un enregistrement
     @staticmethod
     def get(**kwargs) -> RefillModel:
         with sqlite3.connect(PATH_DATABASE) as con:
@@ -74,7 +72,7 @@ class Refillx:
 
             return response
 
-    # Получение записей
+    # Récupération de plusieurs enregistrements
     @staticmethod
     def gets(**kwargs) -> list[RefillModel]:
         with sqlite3.connect(PATH_DATABASE) as con:
@@ -89,7 +87,7 @@ class Refillx:
 
             return response
 
-    # Получение всех записей
+    # Récupération de tous les enregistrements
     @staticmethod
     def get_all() -> list[RefillModel]:
         with sqlite3.connect(PATH_DATABASE) as con:
@@ -103,7 +101,7 @@ class Refillx:
 
             return response
 
-    # Редактирование записи
+    # Modification d'un enregistrement
     @staticmethod
     def update(refill_receipt, **kwargs):
         with sqlite3.connect(PATH_DATABASE) as con:
@@ -114,7 +112,7 @@ class Refillx:
 
             con.execute(sql + "WHERE refill_receipt = ?", parameters)
 
-    # Удаление записи
+    # Suppression d'un enregistrement
     @staticmethod
     def delete(**kwargs):
         with sqlite3.connect(PATH_DATABASE) as con:
@@ -124,7 +122,7 @@ class Refillx:
 
             con.execute(sql, parameters)
 
-    # Очистка всех записей
+    # Nettoyage de tous les enregistrements
     @staticmethod
     def clear():
         with sqlite3.connect(PATH_DATABASE) as con:

@@ -18,8 +18,8 @@ from tgbot.utils.text_functions import open_profile_user
 router = Router(name=__name__)
 
 
-# Открытие товаров
-@router.message(F.text == "🎁 Купить")
+# Accès aux produits
+@router.message(F.text == "🎁 Acheter")
 async def user_shop(message: Message, bot: Bot, state: FSM, arSession: ARS):
     await state.clear()
 
@@ -27,23 +27,23 @@ async def user_shop(message: Message, bot: Bot, state: FSM, arSession: ARS):
 
     if len(get_categories) >= 1:
         await message.answer(
-            "<b>🎁 Выберите нужный вам товар:</b>",
+            "<b>🎁 Choisissez le produit que vous souhaitez :</b>",
             reply_markup=prod_item_category_swipe_fp(0),
         )
     else:
-        await message.answer("<b>🎁 Увы, товары в данное время отсутствуют.</b>")
+        await message.answer("<b>🎁 Désolé, il n'y a pas de produits disponibles en ce moment.</b>")
 
 
-# Открытие профиля
-@router.message(F.text == "👤 Профиль")
+# Accès au profil
+@router.message(F.text == "👤 Profil")
 async def user_profile(message: Message, bot: Bot, state: FSM, arSession: ARS):
     await state.clear()
 
     await open_profile_user(bot, message.from_user.id)
 
 
-# Проверка товаров в наличии
-@router.message(F.text == "🧮 Наличие товаров")
+# Vérification des produits en stock
+@router.message(F.text == "🧮 Disponibilité des produits")
 async def user_available(message: Message, bot: Bot, state: FSM, arSession: ARS):
     await state.clear()
 
@@ -55,9 +55,9 @@ async def user_available(message: Message, bot: Bot, state: FSM, arSession: ARS)
             reply_markup=prod_available_swipe_fp(0, len(items_available)),
         )
     else:
-        await message.answer("<b>🎁 Увы, товары в данное время отсутствуют.</b>")
+        await message.answer("<b>🎁 Désolé, il n'y a pas de produits disponibles en ce moment.</b>")
 
-# Открытие FAQ
+# Accès au FAQ
 @router.message(F.text.in_(('❔ FAQ', '/faq')))
 async def user_faq(message: Message, bot: Bot, state: FSM, arSession: ARS):
     await state.clear()
@@ -67,7 +67,7 @@ async def user_faq(message: Message, bot: Bot, state: FSM, arSession: ARS):
 
     if send_message == "None":
         send_message = ded(f"""
-            ❔ Информация. Измените её в настройках бота.
+            ❔ Informations. Modifiez-les dans les paramètres du bot.
             ➖➖➖➖➖➖➖➖➖➖
             {get_desc()}
         """)
@@ -78,8 +78,8 @@ async def user_faq(message: Message, bot: Bot, state: FSM, arSession: ARS):
     )
 
 
-# Открытие сообщения с ссылкой на поддержку
-@router.message(F.text.in_(('☎️ Поддержка', '/support')))
+# Accès au message avec le lien vers le support
+@router.message(F.text.in_(('☎️ Support', '/support')))
 async def user_support(message: Message, bot: Bot, state: FSM, arSession: ARS):
     await state.clear()
 
@@ -88,7 +88,7 @@ async def user_support(message: Message, bot: Bot, state: FSM, arSession: ARS):
     if get_settings.misc_support == "None":
         return await message.answer(
             ded(f"""
-                ☎️ Поддержка. Измените её в настройках бота.
+                ☎️ Support. Modifiez-le dans les paramètres du bot.
                 ➖➖➖➖➖➖➖➖➖➖
                 {get_desc()}
             """),
@@ -96,20 +96,20 @@ async def user_support(message: Message, bot: Bot, state: FSM, arSession: ARS):
         )
 
     await message.answer(
-        "<b>☎️ Нажмите кнопку ниже для связи с Администратором.</b>",
+        "<b>☎️ Cliquez sur le bouton ci-dessous pour contacter l'Administrateur.</b>",
         reply_markup=user_support_finl(get_settings.misc_support),
     )
 
 
-# Получение версии бота
+# Obtention de la version du bot
 @router.message(Command(commands=['version']))
 async def admin_version(message: Message, bot: Bot, state: FSM, arSession: ARS):
     await state.clear()
 
-    await message.answer(f"<b>❇️ Текущая версия бота: <code>{BOT_VERSION}</code></b>")
+    await message.answer(f"<b>❇️ Version actuelle du bot : <code>{BOT_VERSION}</code></b>")
 
 
-# Получение информации о боте
+# Obtention des informations sur le bot
 @router.message(Command(commands=['dj_desc']))
 async def admin_desc(message: Message, bot: Bot, state: FSM, arSession: ARS):
     await state.clear()
@@ -118,7 +118,7 @@ async def admin_desc(message: Message, bot: Bot, state: FSM, arSession: ARS):
 
 
 ################################################################################
-# Возвращение к профилю
+# Retour au profil
 @router.callback_query(F.data == "user_profile")
 async def user_profile_return(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     await state.clear()
@@ -127,14 +127,14 @@ async def user_profile_return(call: CallbackQuery, bot: Bot, state: FSM, arSessi
     await open_profile_user(bot, call.from_user.id)
 
 
-# Просмотр истории покупок
+# Consultation de l'historique des achats
 @router.callback_query(F.data == "user_purchases")
 async def user_purchases(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     get_purchases = Purchasesx.gets(user_id=call.from_user.id)
     get_purchases = get_purchases[-5:]
 
     if len(get_purchases) >= 1:
-        await call.answer("🎁 Последние 5 покупок")
+        await call.answer("🎁 Vos 5 derniers achats")
         await del_message(call.message)
 
         for purchase in get_purchases:
@@ -142,10 +142,10 @@ async def user_purchases(call: CallbackQuery, bot: Bot, state: FSM, arSession: A
 
             await call.message.answer(
                 ded(f"""
-                    <b>🧾 Чек: <code>#{purchase.purchase_receipt}</code></b>
-                    ▪️ Товар: <code>{purchase.purchase_position_name} | {purchase.purchase_count}шт | {purchase.purchase_price}₽</code>
-                    ▪️ Дата покупки: <code>{convert_date(purchase.purchase_unix)}</code>
-                    ▪️ Товары: <a href='{link_items}'>кликабельно</a>
+                    <b>🧾 Ticket : <code>#{purchase.purchase_receipt}</code></b>
+                    ▪️ Produit : <code>{purchase.purchase_position_name} | {purchase.purchase_count} pcs | {purchase.purchase_price}€</code>
+                    ▪️ Date d'achat : <code>{convert_date(purchase.purchase_unix)}</code>
+                    ▪️ Produits : <a href='{link_items}'>cliquable</a>
                 """)
             )
 
@@ -153,10 +153,10 @@ async def user_purchases(call: CallbackQuery, bot: Bot, state: FSM, arSession: A
 
         await open_profile_user(bot, call.from_user.id)
     else:
-        await call.answer("❗ У вас отсутствуют покупки", True)
+        await call.answer("❗ Vous n'avez aucun achat", True)
 
 
-# Страницы наличия товаров
+# Pages de stock de produits
 @router.callback_query(F.data.startswith("user_available_swipe:"))
 async def user_available_swipe(call: CallbackQuery, bot: Bot, state: FSM, arSession: ARS):
     remover = int(call.data.split(":")[1])
